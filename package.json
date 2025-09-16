@@ -6,5 +6,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:generate": "turbo db:generate",
     "db:push": "turbo db:push"
-  }
+  },
+  "devDependencies": {
+    "turbo": "^2.5.6"
+  },
+  "packageManager": "npm@11.6.0"
 }
