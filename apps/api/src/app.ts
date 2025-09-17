@@ -3,6 +3,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
+import authRoutes from './routes/authRoutes';
+import eventRoutes from './routes/eventRoutes';
 
 const app = express();
 
@@ -34,10 +36,11 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'OK', message: 'Server is running!' });
 });
 
-// Routes will be added here
-// app.use('/api/auth', authRoutes);
-// app.use('/api/events', eventRoutes);
-// etc.
+// Routes 
+app.use('/api/auth', authRoutes);
+
+// Event routes
+app.use('/api/events', eventRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
