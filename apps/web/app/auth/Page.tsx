@@ -1,5 +1,5 @@
-import AuthPage from '@/components/AuthPage';
+import EnhancedAuthPage from '@/components/auth/EnhancedAuthPage';
 
-export default function Auth() {
-  return <AuthPage />;
+export default function AuthPage() {
+  return <EnhancedAuthPage />;
 }
