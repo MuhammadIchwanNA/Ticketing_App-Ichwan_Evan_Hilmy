@@ -1,230 +1,301 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Search, MapPin, Calendar, Users, ChevronDown, User, Menu } from 'lucide-react';
-import { useEvents } from '@/hooks/useEvent';
-import { Event } from '@/types';
+import React, { useState, useEffect } from 'react';
 
-// Category configuration
-const categories = ['Business & Professional', 'Music', 'Food & Drink', 'Sports & Fitness', 'Arts & Culture', 'Education', 'Health & Wellness', 'Technology'];
+// Types
+interface Event {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  startDate: string;
+  endDate: string;
+  location: string;
+  category: string;
+  imageUrl?: string;
+  organizerId: string;
+  availableSeats: number;
+  totalSeats: number;
+  createdAt: string;
+  updatedAt: string;
+  organizer: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  averageRating?: number;
+  totalReviews?: number;
+  totalBookings?: number;
+}
 
-const categoryIcons: { [key: string]: string } = {
-  'Business & Professional': '■',
-  'Music': '♪',
-  'Food & Drink': '◉',
-  'Sports & Fitness': '▲',
-  'Arts & Culture': '●',
-  'Education': '□',
-  'Health & Wellness': '◇',
-  'Technology': '⬢'
-};
+interface EventsResponse {
+  events: Event[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalEvents: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
 
-// Debounce hook
+// Custom hooks
 function useDebounce(value: string, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value);
-  React.useEffect(() => {
+  useEffect(() => {
     const handler = setTimeout(() => setDebouncedValue(value), delay);
     return () => clearTimeout(handler);
   }, [value, delay]);
   return debouncedValue;
 }
 
-// Header Component
-const Header = () => {
-  return (
-    <header className="bg-gradient-to-r from-sky-400 to-blue-500 text-white">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-              <span className="text-blue-500 font-bold text-xl">E</span>
-            </div>
-            <span className="text-2xl font-bold">Enjoyor</span>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <button className="hidden md:flex items-center space-x-1 hover:text-blue-100">
-              <span>My Orders</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <User className="w-5 h-5" />
-              </div>
-              <span className="hidden md:block">Guest User</span>
-            </div>
-            <button className="md:hidden">
-              <Menu className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-};
+function useEvents(filters: {
+  search?: string;
+  category?: string;
+  location?: string;
+  page?: number;
+  limit?: number;
+} = {}) {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [pagination, setPagination] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-// Hero Section
-const HeroSection = ({ onSearch }: { onSearch: (term: string) => void }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handleSearch = () => {
-    onSearch(searchTerm);
+  const fetchEvents = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          queryParams.append(key, value.toString());
+        }
+      });
+      
+      const queryString = queryParams.toString();
+      const url = `http://localhost:5000/api/events${queryString ? `?${queryString}` : ''}`;
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch events');
+      }
+      
+      const data: EventsResponse = await response.json();
+      setEvents(data.events);
+      setPagination(data.pagination);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <section className="relative h-96 bg-gradient-to-r from-blue-600 to-purple-600 overflow-hidden">
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-30"
-        style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&h=400&fit=crop)'
-        }}
-      />
-      
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {[0, 1, 2, 3, 4].map((_, index) => (
-          <div
-            key={index}
-            className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-white' : 'bg-white/30'}`}
-          />
-        ))}
-      </div>
-      
-      <button className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30">
-        ←
-      </button>
-      <button className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30">
-        →
-      </button>
-      
-      <div className="relative h-full flex items-center justify-center text-white text-center">
-        <div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Event booking made easy with
-          </h1>
-          <h2 className="text-3xl md:text-5xl font-bold mb-8 text-yellow-300">
-            Enjoyor
-          </h2>
-        </div>
-      </div>
-    </section>
-  );
-};
+  useEffect(() => {
+    fetchEvents();
+  }, [filters.search, filters.category, filters.location, filters.page]);
 
-// Category Selector
-const CategorySelector = ({ 
+  return { events, pagination, loading, error, refetch: fetchEvents };
+}
+
+// Components
+const SearchStrip = ({ 
+  searchTerm, 
+  setSearchTerm, 
   selectedCategory, 
-  onCategoryChange 
-}: { 
+  setSelectedCategory, 
+  locationFilter, 
+  setLocationFilter,
+  onSearch 
+}: {
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
   selectedCategory: string;
-  onCategoryChange: (category: string) => void;
+  setSelectedCategory: (category: string) => void;
+  locationFilter: string;
+  setLocationFilter: (location: string) => void;
+  onSearch: () => void;
 }) => {
+  const cities = ["Jakarta", "Bandung", "Surabaya", "Yogyakarta", "Bali", "Medan"];
+  const categories = ["All Categories", "Business & Professional", "Music", "Food & Drink", "Arts & Culture", "Technology", "Sports & Fitness", "Health & Wellness", "Education"];
+
   return (
-    <section className="bg-white py-8 shadow-sm">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => onCategoryChange(category)}
-              className={`flex flex-col items-center p-4 rounded-lg transition-all ${
-                selectedCategory === category
-                  ? 'bg-blue-50 text-blue-600 border-2 border-blue-200'
-                  : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border-2 border-transparent'
-              }`}
-            >
-              <div className="text-3xl mb-2 font-bold text-gray-700">
-                {categoryIcons[category] || '●'}
-              </div>
-              <span className="text-xs font-medium text-center leading-tight">
-                {category}
-              </span>
-            </button>
-          ))}
-        </div>
+    <div className="mt-4 grid grid-cols-1 md:grid-cols-5 border hairline rounded-xl overflow-hidden bg-white">
+      <div className="booking-field">
+        <span className="booking-label">What</span>
+        <input
+          type="text"
+          placeholder="Search events..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="booking-value bg-transparent border-none outline-none w-full"
+        />
       </div>
-    </section>
+      
+      <div className="booking-field border-t md:border-t-0 md:border-l hairline">
+        <span className="booking-label">Where</span>
+        <select
+          value={locationFilter}
+          onChange={(e) => setLocationFilter(e.target.value)}
+          className="booking-value bg-transparent border-none outline-none w-full"
+        >
+          {cities.map(city => (
+            <option key={city} value={city}>{city}</option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="booking-field border-t md:border-t-0 md:border-l hairline">
+        <span className="booking-label">Category</span>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="booking-value bg-transparent border-none outline-none w-full"
+        >
+          {categories.map(category => (
+            <option key={category} value={category === 'All Categories' ? '' : category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="booking-field border-t md:border-t-0 md:border-l hairline">
+        <span className="booking-label">When</span>
+        <span className="booking-value">Any date</span>
+      </div>
+      
+      <div className="md:border-l hairline p-2 flex">
+        <button onClick={onSearch} className="btn btn-primary w-full">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-3.5-3.5" />
+          </svg>
+          Find Events
+        </button>
+      </div>
+    </div>
   );
 };
 
-// Event Card Component
 const EventCard = ({ event }: { event: Event }) => {
   const formatPrice = (price: number) => {
     if (price === 0) return 'Free';
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0
-    }).format(price);
+    return `IDR ${(price / 1000).toFixed(0)}K`;
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short', 
+      day: 'numeric'
     });
   };
 
+  const formatLocation = (location: string) => {
+    const parts = location.split(',');
+    return parts[0].trim();
+  };
+
+  // Dynamic chip color based on availability
+  const getAvailabilityChip = (available: number, total: number) => {
+    const ratio = available / total;
+    if (ratio > 0.5) return 'status-available';
+    if (ratio > 0.2) return 'status-limited';
+    return 'status-sold-out';
+  };
+
+  // Cycle through tint backgrounds
+  const getTintClass = (id: string) => {
+    const tints = ['bg-rose-tint', 'bg-banana-tint', 'bg-mint-tint', 'bg-sky-tint'];
+    const hash = id.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+    return tints[hash % 4];
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="relative">
-        <img 
-          src={event.imageUrl || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=300&fit=crop'} 
-          alt={event.name}
-          className="w-full h-48 object-cover"
-        />
-        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
-          {event.category}
-        </div>
+    <div className="card overflow-hidden hover-lift group">
+      <div className="relative aspect-[5/3]">
+        {event.imageUrl ? (
+          <img 
+            src={event.imageUrl} 
+            alt={event.name} 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className={`absolute inset-0 ${getTintClass(event.id)}`} />
+        )}
+        {/* Overlay gradient for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
       </div>
-      
-      <div className="p-5">
-        <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
-          {event.name}
-        </h3>
-        
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {event.description}
-        </p>
-        
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center text-sm text-gray-500">
-            <Calendar className="w-4 h-4 mr-2" />
-            {formatDate(event.startDate)}
-          </div>
-          
-          <div className="flex items-center text-sm text-gray-500">
-            <MapPin className="w-4 h-4 mr-2" />
-            {event.location}
-          </div>
-          
-          <div className="flex items-center text-sm text-gray-500">
-            <Users className="w-4 h-4 mr-2" />
-            {event.availableSeats} tickets available
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="font-semibold text-lg leading-tight line-clamp-2 flex-1 mr-2 group-hover:text-gradient transition-all duration-200">
+            {event.name}
+          </h3>
+          <div className="text-right flex-shrink-0">
+            <div className="font-semibold">{formatPrice(event.price)}</div>
           </div>
         </div>
-        
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <div>
-            <div className="text-lg font-bold text-blue-600">
-              {formatPrice(event.price)}
-            </div>
-            <div className="text-xs text-gray-500">per person</div>
-          </div>
-          
-          <button className="bg-gradient-to-r from-sky-400 to-blue-500 text-white px-6 py-2 rounded-lg font-medium hover:from-sky-500 hover:to-blue-600 transition-all">
-            Book Now
-          </button>
+        <div className="text-muted text-sm mb-1">{formatDate(event.startDate)}</div>
+        <div className="text-muted text-sm mb-3">{formatLocation(event.location)}</div>
+        <div className="flex items-center justify-between">
+          <span className="chip">{event.category}</span>
+          <span className={`text-xs px-2 py-1 rounded-full ${getAvailabilityChip(event.availableSeats, event.totalSeats)}`}>
+            {event.availableSeats} left
+          </span>
         </div>
       </div>
     </div>
   );
 };
 
-// Main Component
-export default function IntegratedLandingPage() {
+const CategoryList = ({ 
+  categories, 
+  selectedCategory, 
+  onCategorySelect 
+}: {
+  categories: string[];
+  selectedCategory: string;
+  onCategorySelect: (category: string) => void;
+}) => (
+  <ul className="divide-y hairline text-[1.05rem]">
+    {categories.map((category) => (
+      <li key={category} className="flex items-center justify-between py-4">
+        <button
+          onClick={() => onCategorySelect(category)}
+          className={`hover:text-[var(--text)] transition-colors ${
+            selectedCategory === category ? 'font-semibold' : ''
+          }`}
+        >
+          {category}
+        </button>
+        <span aria-hidden>→</span>
+      </li>
+    ))}
+  </ul>
+);
+
+const LoadingGrid = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {[1, 2, 3, 4, 5, 6].map((i) => (
+      <div key={i} className="card overflow-hidden animate-pulse">
+        <div className="aspect-[5/3] bg-gray-200"></div>
+        <div className="p-4">
+          <div className="h-5 bg-gray-200 rounded mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-2/3 mb-1"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+export default function EnjoyorNewDesign() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [locationFilter, setLocationFilter] = useState('Jakarta');
   const [currentPage, setCurrentPage] = useState(1);
   
   const debouncedSearch = useDebounce(searchTerm, 500);
@@ -233,154 +304,205 @@ export default function IntegratedLandingPage() {
   const { events, pagination, loading, error } = useEvents({
     search: debouncedSearch,
     category: selectedCategory,
+    location: locationFilter === 'Jakarta' ? '' : locationFilter,
     page: currentPage,
-    limit: 12
+    limit: 6
   });
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Header />
-        <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        </div>
-      </div>
-    );
-  }
+  const categories = ["Business & Professional", "Music", "Food & Drink", "Arts & Culture", "Technology", "Sports & Fitness"];
 
-  // Error state
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Header />
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="text-red-500 text-xl mb-4">Error loading events</div>
-            <p className="text-gray-600">{error}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleSearch = () => {
+    setCurrentPage(1);
+  };
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(selectedCategory === category ? '' : category);
+    setCurrentPage(1);
+  };
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedCategory('');
+    setLocationFilter('Jakarta');
+    setCurrentPage(1);
+  };
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-      <HeroSection onSearch={setSearchTerm} />
-      <CategorySelector 
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-      />
-      
-      {/* Search Bar */}
-      <section className="bg-gray-50 py-8">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search events..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
+    <main>
+      {/* Search strip */}
+      <section className="bg-cream border-b hairline">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+          <SearchStrip
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            locationFilter={locationFilter}
+            setLocationFilter={setLocationFilter}
+            onSearch={handleSearch}
+          />
+        </div>
+      </section>
+
+      {/* Hero */}
+      <section className="bg-cream">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid">
+            <h1 className="hero-title">
+              Discover Events.<br /> Easy Booking.
+            </h1>
+            <p className="text-muted mt-4 text-lg max-w-2xl">
+              Find and book the best events in your city. From conferences to concerts, workshops to festivals.
+            </p>
           </div>
         </div>
       </section>
-      
-      {/* Events Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-blue-600 mb-4">
-              {events.length > 0 ? "It's more than just an event" : "No events found"}
-            </h2>
-            {pagination && (
-              <p className="text-gray-600">
-                Showing {events.length} of {pagination.totalEvents} events
-              </p>
+
+      {/* Main content area */}
+      <section className="border-t hairline border-b">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-4 gap-8 py-8">
+          {/* Categories sidebar */}
+          <div className="lg:border-r hairline pr-0 lg:pr-8">
+            <h2 className="text-xl font-semibold mb-6">Browse Categories</h2>
+            <CategoryList
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategorySelect={handleCategorySelect}
+            />
+          </div>
+
+          {/* Events grid */}
+          <div className="lg:col-span-3">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-semibold">
+                  {selectedCategory ? `${selectedCategory} Events` : 
+                   debouncedSearch ? `Results for "${debouncedSearch}"` : 
+                   `Events in ${locationFilter}`}
+                </h2>
+                <p className="text-muted mt-1">
+                  {loading ? 'Loading events...' : 
+                   events.length === 0 ? 'No events found' :
+                   pagination ? `${pagination.totalEvents} events found` : 
+                   `${events.length} events`}
+                </p>
+              </div>
+              {(selectedCategory || debouncedSearch) && (
+                <button onClick={clearFilters} className="btn btn-ghost text-sm">
+                  Clear filters
+                </button>
+              )}
+            </div>
+
+            {/* Loading State */}
+            {loading && <LoadingGrid />}
+
+            {/* Error State */}
+            {error && (
+              <div className="text-center py-12">
+                <div className="text-red-600 text-lg mb-4">Error loading events</div>
+                <p className="text-muted mb-4">{error}</p>
+                <button 
+                  onClick={() => window.location.reload()}
+                  className="btn btn-primary"
+                >
+                  Try Again
+                </button>
+              </div>
+            )}
+
+            {/* Events Grid */}
+            {!loading && !error && events.length > 0 && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {events.map((event: Event) => (
+                    <EventCard key={event.id} event={event} />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {pagination && pagination.totalPages > 1 && (
+                  <div className="mt-12 flex justify-center">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                        disabled={!pagination.hasPrevPage}
+                        className="btn btn-ghost disabled:opacity-50"
+                      >
+                        Previous
+                      </button>
+                      
+                      {Array.from({ length: Math.min(pagination.totalPages, 5) }, (_, i) => {
+                        const page = i + 1;
+                        return (
+                          <button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            className={`btn ${currentPage === page ? 'btn-primary' : 'btn-ghost'}`}
+                          >
+                            {page}
+                          </button>
+                        );
+                      })}
+                      
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, pagination.totalPages))}
+                        disabled={!pagination.hasNextPage}
+                        className="btn btn-ghost disabled:opacity-50"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Empty State */}
+            {!loading && !error && events.length === 0 && (
+              <div className="text-center py-12">
+                <h3 className="text-xl font-semibold mb-2">No events found</h3>
+                <p className="text-muted mb-6">Try adjusting your search criteria</p>
+                <button onClick={clearFilters} className="btn btn-primary">
+                  Show all events
+                </button>
+              </div>
             )}
           </div>
-          
-          {events.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {events.map((event: Event) => (
-                  <EventCard key={event.id} event={event} />
-                ))}
-              </div>
-              
-              {/* Pagination */}
-              {pagination && pagination.totalPages > 1 && (
-                <div className="flex justify-center mt-12">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                      disabled={!pagination.hasPrevPage}
-                      className="px-4 py-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50"
-                    >
-                      Previous
-                    </button>
-                    
-                    {Array.from({ length: Math.min(pagination.totalPages, 5) }, (_, i) => {
-                      const page = i + 1;
-                      return (
-                        <button
-                          key={page}
-                          onClick={() => setCurrentPage(page)}
-                          className={`px-4 py-2 border rounded-lg ${
-                            currentPage === page ? 'bg-blue-500 text-white' : 'hover:bg-gray-50'
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      );
-                    })}
-                    
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, pagination.totalPages))}
-                      disabled={!pagination.hasNextPage}
-                      className="px-4 py-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-16">
-              <div className="text-gray-400 text-4xl mb-4">No Results</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">No events found</h3>
-              <p className="text-gray-600 mb-6">Try adjusting your search or filters</p>
-              <button 
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('');
-                }}
-                className="bg-blue-500 text-white px-6 py-3 rounded-lg"
-              >
-                Show all events
-              </button>
-            </div>
-          )}
         </div>
       </section>
-      
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p>© 2024 Enjoyor. All Rights Reserved.</p>
+
+      {/* Featured cities or news section */}
+      <section className="border-b hairline">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="card overflow-hidden p-0">
+                <div className="relative aspect-[5/3]">
+                  <div className="absolute inset-0 bg-[rgba(189,227,195,0.35)]" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">
+                    Upcoming Events This Month
+                  </h3>
+                  <p className="text-muted">
+                    Don't miss out on the hottest events happening in your city.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col justify-center">
+              <h3 className="text-[1.6rem] leading-tight mb-4">
+                New Event Categories Added: Technology & Health Workshops
+              </h3>
+              <button className="btn btn-ghost w-fit">
+                <span className="inline-grid place-items-center h-6 w-6 rounded-full border hairline mr-1">↗</span>
+                Learn More
+              </button>
+            </div>
+          </div>
         </div>
-      </footer>
-    </div>
+      </section>
+    </main>
   );
 }
