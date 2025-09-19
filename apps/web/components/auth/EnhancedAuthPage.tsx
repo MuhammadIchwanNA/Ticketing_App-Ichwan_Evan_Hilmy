@@ -1,21 +1,25 @@
+// components/auth/EnhancedAuthPage.tsx
 'use client';
-import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, UserCheck, AlertCircle, CheckCircle, ArrowRight, Shield, Gift, Users } from 'lucide-react';
+
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  Eye, EyeOff, Mail, Lock, User, UserCheck,
+  AlertCircle, CheckCircle, ArrowRight, Shield, Gift, Users
+} from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface LoginFormProps {
-  onLogin: (email: string, password: string) => Promise<void>;
   onSwitchToRegister: () => void;
   onForgotPassword: () => void;
 }
 
 interface RegisterFormProps {
-  onRegister: (userData: UserRegistrationData) => Promise<void>;
   onSwitchToLogin: () => void;
 }
 
 interface ForgotPasswordFormProps {
   onBack: () => void;
-  onResetRequest: (email: string) => Promise<void>;
 }
 
 interface UserRegistrationData {
@@ -26,8 +30,10 @@ interface UserRegistrationData {
   referredBy?: string;
 }
 
-// Enhanced Login Component
-export const EnhancedLoginForm = ({ onLogin, onSwitchToRegister, onForgotPassword }: LoginFormProps) => {
+/** ---------------------------
+ *  Enhanced Login Component
+ *  --------------------------*/
+export const EnhancedLoginForm = ({ onSwitchToRegister, onForgotPassword }: LoginFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -35,13 +41,17 @@ export const EnhancedLoginForm = ({ onLogin, onSwitchToRegister, onForgotPasswor
   const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
+  const { login } = useAuth();
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      await onLogin(email, password);
+      await login(email, password);
+      router.push('/'); // Redirect to home after successful login
     } catch (err: unknown) {
       setError((err as Error)?.message || 'Login failed');
     } finally {
@@ -122,7 +132,7 @@ export const EnhancedLoginForm = ({ onLogin, onSwitchToRegister, onForgotPasswor
                 <span className="ml-2 text-sm text-muted">Remember me</span>
               </label>
 
-              <button 
+              <button
                 type="button"
                 onClick={onForgotPassword}
                 className="text-sm text-sky hover:text-mint transition-colors category-highlight"
@@ -132,11 +142,7 @@ export const EnhancedLoginForm = ({ onLogin, onSwitchToRegister, onForgotPasswor
             </div>
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full btn btn-primary"
-            >
+            <button type="submit" disabled={loading} className="w-full btn btn-primary">
               {loading ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
@@ -183,8 +189,10 @@ export const EnhancedLoginForm = ({ onLogin, onSwitchToRegister, onForgotPasswor
   );
 };
 
-// Enhanced Register Component
-export const EnhancedRegisterForm = ({ onRegister, onSwitchToLogin }: RegisterFormProps) => {
+/** ------------------------------
+ *  Enhanced Register Component
+ *  -----------------------------*/
+export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -201,10 +209,13 @@ export const EnhancedRegisterForm = ({ onRegister, onSwitchToLogin }: RegisterFo
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, feedback: '' });
 
+  const { register } = useAuth();
+  const router = useRouter();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     if (name === 'password') {
       checkPasswordStrength(value);
     }
@@ -213,22 +224,22 @@ export const EnhancedRegisterForm = ({ onRegister, onSwitchToLogin }: RegisterFo
   const checkPasswordStrength = (password: string) => {
     let score = 0;
     const feedback: string[] = [];
-    
+
     if (password.length >= 8) score++;
     else feedback.push('at least 8 characters');
-    
+
     if (/[a-z]/.test(password)) score++;
     else feedback.push('lowercase letter');
-    
+
     if (/[A-Z]/.test(password)) score++;
     else feedback.push('uppercase letter');
-    
+
     if (/\d/.test(password)) score++;
     else feedback.push('number');
-    
+
     if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++;
     else feedback.push('special character');
-    
+
     setPasswordStrength({
       score,
       feedback: feedback.length > 0 ? `Add ${feedback.join(', ')}` : 'Strong password!'
@@ -267,8 +278,13 @@ export const EnhancedRegisterForm = ({ onRegister, onSwitchToLogin }: RegisterFo
         ...(formData.referredBy && { referredBy: formData.referredBy.trim() })
       };
 
-      await onRegister(userData);
+      await register(userData);
       setSuccess('Account created successfully! Welcome to Enjoyor.');
+
+      // Redirect after successful registration
+      setTimeout(() => {
+        router.push('/');
+      }, 1500);
     } catch (err: unknown) {
       setError((err as Error)?.message || 'Registration failed');
     } finally {
@@ -358,8 +374,8 @@ export const EnhancedRegisterForm = ({ onRegister, onSwitchToLogin }: RegisterFo
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, role: 'CUSTOMER' }))}
                   className={`p-3 rounded-lg border transition-all ${
-                    formData.role === 'CUSTOMER' 
-                      ? 'bg-sky-tint border-sky text-ink' 
+                    formData.role === 'CUSTOMER'
+                      ? 'bg-sky-tint border-sky text-ink'
                       : 'border-line text-muted hover:border-sky hover:bg-sky-tint'
                   }`}
                 >
@@ -370,8 +386,8 @@ export const EnhancedRegisterForm = ({ onRegister, onSwitchToLogin }: RegisterFo
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, role: 'ORGANIZER' }))}
                   className={`p-3 rounded-lg border transition-all ${
-                    formData.role === 'ORGANIZER' 
-                      ? 'bg-mint-tint border-mint text-ink' 
+                    formData.role === 'ORGANIZER'
+                      ? 'bg-mint-tint border-mint text-ink'
                       : 'border-line text-muted hover:border-mint hover:bg-mint-tint'
                   }`}
                 >
@@ -407,7 +423,7 @@ export const EnhancedRegisterForm = ({ onRegister, onSwitchToLogin }: RegisterFo
               {formData.password && (
                 <div className="mt-2">
                   <div className="h-2 bg-line rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className={`h-full transition-all duration-300 ${getStrengthColor()}`}
                       style={{ width: getStrengthWidth() }}
                     ></div>
@@ -558,8 +574,10 @@ export const EnhancedRegisterForm = ({ onRegister, onSwitchToLogin }: RegisterFo
   );
 };
 
-// Forgot Password Component
-export const ForgotPasswordForm = ({ onBack, onResetRequest }: ForgotPasswordFormProps) => {
+/** ----------------------------
+ *  Forgot Password Component
+ *  ---------------------------*/
+export const ForgotPasswordForm = ({ onBack }: ForgotPasswordFormProps) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -571,7 +589,8 @@ export const ForgotPasswordForm = ({ onBack, onResetRequest }: ForgotPasswordFor
     setLoading(true);
 
     try {
-      await onResetRequest(email);
+      // Placeholder for forgot password API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
       setSuccess(true);
     } catch (err: unknown) {
       setError((err as Error)?.message || 'Failed to send reset email');
@@ -666,54 +685,46 @@ export const ForgotPasswordForm = ({ onBack, onResetRequest }: ForgotPasswordFor
   );
 };
 
-// Main Auth Container
+/** -----------------------
+ *  Main Auth Container
+ *  ----------------------*/
+type View = 'login' | 'register' | 'forgot';
+
 export default function EnhancedAuthPage() {
-  const [currentView, setCurrentView] = useState<'login' | 'register' | 'forgot'>('login');
-  const [user, setUser] = useState<any>(null);
+  const { user } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const handleLogin = async (email: string, password: string) => {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+  // get view from URL (?view=login|register|forgot), default to 'login'
+  const urlView = (searchParams.get('view') as View) ?? 'login';
+  const safeUrlView: View = ['login', 'register', 'forgot'].includes(urlView)
+    ? (urlView as View)
+    : 'login';
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Login failed');
+  const [currentView, setCurrentView] = useState<View>(safeUrlView);
+
+  // sync with URL changes (back/forward)
+  useEffect(() => {
+    const v = (searchParams.get('view') as View) ?? 'login';
+    if (['login', 'register', 'forgot'].includes(v) && v !== currentView) {
+      setCurrentView(v);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
-    const data = await response.json();
-    localStorage.setItem('authToken', data.token);
-    localStorage.setItem('authUser', JSON.stringify(data.user));
-    setUser(data.user);
+  // helper to update both state and URL
+  const setView = (v: View) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (v === 'login') params.delete('view');
+    else params.set('view', v);
+
+    const next = params.toString();
+    router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
+    setCurrentView(v);
   };
 
-  const handleRegister = async (userData: UserRegistrationData) => {
-    const response = await fetch('http://localhost:5000/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Registration failed');
-    }
-
-    const data = await response.json();
-    localStorage.setItem('authToken', data.token);
-    localStorage.setItem('authUser', JSON.stringify(data.user));
-    setUser(data.user);
-  };
-
-  const handleForgotPassword = async (email: string) => {
-    // Placeholder for forgot password API call
-    return new Promise<void>((resolve) => {
-      setTimeout(() => resolve(), 2000);
-    });
-  };
-
+  // If already logged in, show quick redirect card
   if (user) {
     return (
       <div className="min-h-screen bg-cream hero-bg flex items-center justify-center">
@@ -721,15 +732,12 @@ export default function EnhancedAuthPage() {
           <div className="w-16 h-16 bg-gradient-to-br from-mint to-sky rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-2xl font-bold mb-2">Welcome to Enjoyor!</h2>
+          <h2 className="text-2xl font-bold mb-2">Welcome back!</h2>
           <p className="text-muted mb-6">
-            You've successfully {currentView === 'login' ? 'signed in' : 'joined our community'}.
+            You are already signed in as {user.name}.
           </p>
-          <button
-            onClick={() => window.location.href = '/'}
-            className="btn btn-primary"
-          >
-            Start Exploring Events
+          <button onClick={() => router.push('/')} className="btn btn-primary">
+            Go to Home
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -740,23 +748,16 @@ export default function EnhancedAuthPage() {
   return (
     <>
       {currentView === 'login' && (
-        <EnhancedLoginForm 
-          onLogin={handleLogin}
-          onSwitchToRegister={() => setCurrentView('register')}
-          onForgotPassword={() => setCurrentView('forgot')}
+        <EnhancedLoginForm
+          onSwitchToRegister={() => setView('register')}
+          onForgotPassword={() => setView('forgot')}
         />
       )}
       {currentView === 'register' && (
-        <EnhancedRegisterForm
-          onRegister={handleRegister}
-          onSwitchToLogin={() => setCurrentView('login')}
-        />
+        <EnhancedRegisterForm onSwitchToLogin={() => setView('login')} />
       )}
       {currentView === 'forgot' && (
-        <ForgotPasswordForm 
-          onBack={() => setCurrentView('login')}
-          onResetRequest={handleForgotPassword}
-        />
+        <ForgotPasswordForm onBack={() => setView('login')} />
       )}
     </>
   );

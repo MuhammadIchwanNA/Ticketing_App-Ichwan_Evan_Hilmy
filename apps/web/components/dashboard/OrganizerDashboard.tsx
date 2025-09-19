@@ -1,31 +1,65 @@
-'use client';
 import React, { useState } from 'react';
-import {
-  Plus, Calendar, Users, TrendingUp, Banknote, Star, MapPin, Clock, Eye,
-  Edit, Trash2, Filter, Search, MoreHorizontal, CheckCircle, XCircle,
-  AlertCircle, Download, BarChart3, PieChart as IconPieChart
-} from 'lucide-react';
-import {
-  ResponsiveContainer,
-  LineChart as ReLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  BarChart as ReBarChart, Bar,
-  PieChart as RePieChart, Pie, Cell
-} from 'recharts';
+import { Plus, Calendar, Users, TrendingUp, DollarSign, Star, MapPin, Clock, Eye, Edit, Trash2, Filter, Search, MoreHorizontal, CheckCircle, XCircle, AlertCircle, Download, BarChart3, PieChart } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
 
-type EventStatus = 'published' | 'draft' | 'cancelled';
-type TxStatus = 'WAITING_CONFIRMATION' | 'CONFIRMED' | 'WAITING_PAYMENT' | 'REJECTED' | 'EXPIRED';
+interface Event {
+  id: string;
+  name: string;
+  category: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  totalSeats: number;
+  availableSeats: number;
+  price: number;
+  status: 'published' | 'draft' | 'cancelled';
+  registrations: number;
+  revenue: number;
+  rating: number;
+  reviews: number;
+  imageUrl: string;
+}
 
-const formatIDR = (n: number) =>
-  new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+interface Transaction {
+  id: string;
+  eventName: string;
+  customerName: string;
+  email: string;
+  ticketCount: number;
+  totalAmount: number;
+  status: 'WAITING_CONFIRMATION' | 'CONFIRMED' | 'WAITING_PAYMENT' | 'REJECTED' | 'EXPIRED';
+  paymentProof: string | null;
+  createdAt: string;
+  expiresAt: string | null;
+}
 
-const OrganizerDashboard: React.FC = () => {
+interface RevenueData {
+  month: string;
+  revenue: number;
+  events: number;
+}
+
+interface CategoryData {
+  name: string;
+  value: number;
+  revenue: number;
+  [key: string]: string | number;
+}
+
+interface RegistrationTrend {
+  date: string;
+  registrations: number;
+  target: number;
+}
+
+const OrganizerDashboard = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'events' | 'transactions' | 'analytics'>('overview');
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState<'all' | EventStatus>('all');
+  const [filterStatus, setFilterStatus] = useState('all');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
 
   // Mock data
-  const [events] = useState([
+  const [events] = useState<Event[]>([
     {
       id: '1',
       name: 'Jakarta Developer Summit 2025',
@@ -36,7 +70,7 @@ const OrganizerDashboard: React.FC = () => {
       totalSeats: 1000,
       availableSeats: 450,
       price: 500000,
-      status: 'published' as EventStatus,
+      status: 'published',
       registrations: 550,
       revenue: 275000000,
       rating: 4.8,
@@ -53,7 +87,7 @@ const OrganizerDashboard: React.FC = () => {
       totalSeats: 50,
       availableSeats: 12,
       price: 250000,
-      status: 'published' as EventStatus,
+      status: 'published',
       registrations: 38,
       revenue: 9500000,
       rating: 4.9,
@@ -70,7 +104,7 @@ const OrganizerDashboard: React.FC = () => {
       totalSeats: 200,
       availableSeats: 200,
       price: 0,
-      status: 'draft' as EventStatus,
+      status: 'draft',
       registrations: 0,
       revenue: 0,
       rating: 0,
@@ -79,7 +113,7 @@ const OrganizerDashboard: React.FC = () => {
     }
   ]);
 
-  const [transactions] = useState([
+  const [transactions] = useState<Transaction[]>([
     {
       id: '1',
       eventName: 'Jakarta Developer Summit 2025',
@@ -87,7 +121,7 @@ const OrganizerDashboard: React.FC = () => {
       email: 'alice@example.com',
       ticketCount: 2,
       totalAmount: 1000000,
-      status: 'WAITING_CONFIRMATION' as TxStatus,
+      status: 'WAITING_CONFIRMATION',
       paymentProof: 'proof_1.jpg',
       createdAt: '2025-01-18',
       expiresAt: '2025-01-21'
@@ -99,10 +133,10 @@ const OrganizerDashboard: React.FC = () => {
       email: 'bob@example.com',
       ticketCount: 1,
       totalAmount: 250000,
-      status: 'CONFIRMED' as TxStatus,
+      status: 'CONFIRMED',
       paymentProof: 'proof_2.jpg',
       createdAt: '2025-01-17',
-      expiresAt: null as string | null
+      expiresAt: null
     },
     {
       id: '3',
@@ -111,63 +145,15 @@ const OrganizerDashboard: React.FC = () => {
       email: 'carol@example.com',
       ticketCount: 1,
       totalAmount: 500000,
-      status: 'WAITING_PAYMENT' as TxStatus,
-      paymentProof: null as string | null,
+      status: 'WAITING_PAYMENT',
+      paymentProof: null,
       createdAt: '2025-01-19',
       expiresAt: '2025-01-19T14:30:00'
     }
   ]);
 
-  const stats = {
-    totalEvents: events.length,
-    totalRegistrations: events.reduce((sum, e) => sum + e.registrations, 0),
-    totalRevenue: events.reduce((sum, e) => sum + e.revenue, 0),
-    avgRating:
-      events.filter(e => e.rating > 0).reduce((sum, e) => sum + e.rating, 0) /
-        (events.filter(e => e.rating > 0).length || 1)
-  };
-
-  const filteredEvents = events.filter(event => {
-    const q = searchQuery.toLowerCase();
-    const matchesSearch = event.name.toLowerCase().includes(q) || event.category.toLowerCase().includes(q);
-    const matchesFilter = filterStatus === 'all' || event.status === filterStatus;
-    return matchesSearch && matchesFilter;
-  });
-
-  const getStatusColor = (status: EventStatus) => {
-    switch (status) {
-      case 'published': return 'status-available';
-      case 'draft': return 'status-limited';
-      case 'cancelled': return 'status-sold-out';
-      default: return 'chip';
-    }
-  };
-
-  const getTransactionStatusColor = (status: TxStatus) => {
-    switch (status) {
-      case 'CONFIRMED': return 'status-available';
-      case 'WAITING_CONFIRMATION':
-      case 'WAITING_PAYMENT': return 'status-limited';
-      case 'REJECTED':
-      case 'EXPIRED': return 'status-sold-out';
-      default: return 'chip';
-    }
-  };
-
-  const handleTransactionAction = (transactionId: string, action: 'approve' | 'reject') => {
-    console.log(`${action} transaction ${transactionId}`);
-    // TODO: call API
-  };
-
-  const handleDeleteEvent = (eventId: string | null) => {
-    if (!eventId) return;
-    console.log(`Delete event ${eventId}`);
-    setShowDeleteConfirm(null);
-    // TODO: call API
-  };
-
   // Sample data for charts
-  const revenueData = [
+  const revenueData: RevenueData[] = [
     { month: 'Jan', revenue: 85000000, events: 2 },
     { month: 'Feb', revenue: 120000000, events: 3 },
     { month: 'Mar', revenue: 95000000, events: 2 },
@@ -176,14 +162,14 @@ const OrganizerDashboard: React.FC = () => {
     { month: 'Jun', revenue: 220000000, events: 5 }
   ];
 
-  const categoryData = [
+  const categoryData: CategoryData[] = [
     { name: 'Technology', value: 45, revenue: 275000000 },
     { name: 'Education', value: 25, revenue: 125000000 },
     { name: 'Business', value: 20, revenue: 95000000 },
     { name: 'Others', value: 10, revenue: 45000000 }
   ];
 
-  const registrationTrends = [
+  const registrationTrends: RegistrationTrend[] = [
     { date: 'Week 1', registrations: 45, target: 50 },
     { date: 'Week 2', registrations: 78, target: 70 },
     { date: 'Week 3', registrations: 65, target: 60 },
@@ -192,8 +178,53 @@ const OrganizerDashboard: React.FC = () => {
     { date: 'Week 6', registrations: 85, target: 90 }
   ];
 
+  const stats = {
+    totalEvents: events.length,
+    totalRegistrations: events.reduce((sum, event) => sum + event.registrations, 0),
+    totalRevenue: events.reduce((sum, event) => sum + event.revenue, 0),
+    avgRating: events.filter(e => e.rating > 0).reduce((sum, event) => sum + event.rating, 0) / events.filter(e => e.rating > 0).length || 0
+  };
+
+  const filteredEvents = events.filter(event => {
+    const matchesSearch = event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         event.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter = filterStatus === 'all' || event.status === filterStatus;
+    return matchesSearch && matchesFilter;
+  });
+
+  const getStatusColor = (status: string) => {
+    switch(status) {
+      case 'published': return 'status-available';
+      case 'draft': return 'status-limited';
+      case 'cancelled': return 'status-sold-out';
+      default: return 'chip';
+    }
+  };
+
+  const getTransactionStatusColor = (status: string) => {
+    switch(status) {
+      case 'CONFIRMED': return 'status-available';
+      case 'WAITING_CONFIRMATION': return 'status-limited';
+      case 'WAITING_PAYMENT': return 'status-limited';
+      case 'REJECTED': return 'status-sold-out';
+      case 'EXPIRED': return 'status-sold-out';
+      default: return 'chip';
+    }
+  };
+
+  const handleTransactionAction = (transactionId: string, action: string) => {
+    console.log(`${action} transaction ${transactionId}`);
+    // Here you would call your API to update transaction status
+  };
+
+  const handleDeleteEvent = (eventId: string) => {
+    console.log(`Delete event ${eventId}`);
+    setShowDeleteConfirm(null);
+    // Here you would call your API to delete the event
+  };
+
   // Overview Tab with Charts
-  const OverviewContent: React.FC = () => (
+  const OverviewContent = () => (
     <div className="space-y-6">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -218,9 +249,9 @@ const OrganizerDashboard: React.FC = () => {
         <div className="card p-6 hover-lift">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-medium text-muted">Total Revenue</h3>
-            <Banknote className="w-5 h-5 text-banana" />
+            <DollarSign className="w-5 h-5 text-banana" />
           </div>
-          <div className="text-2xl font-bold">{formatIDR(stats.totalRevenue)}</div>
+          <div className="text-2xl font-bold">IDR {stats.totalRevenue.toLocaleString()}</div>
           <p className="text-xs text-muted">+22% vs last month</p>
         </div>
 
@@ -243,81 +274,70 @@ const OrganizerDashboard: React.FC = () => {
             Revenue Trend (6 Months)
           </h3>
           <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <ReLineChart data={revenueData} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
-                <XAxis dataKey="month" stroke="var(--muted)" fontSize={12} />
-                <YAxis
-                  stroke="var(--muted)"
-                  fontSize={12}
-                  tickFormatter={(value: number) => `${(value / 1_000_000).toFixed(0)}M`}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'var(--surface)',
-                    border: '1px solid var(--line)',
-                    borderRadius: '8px'
-                  }}
-                  formatter={(value: number) => [formatIDR(Number(value)), 'Revenue']}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="var(--sky)"
-                  strokeWidth={3}
-                  dot={{ fill: 'var(--sky)', strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, stroke: 'var(--sky)', strokeWidth: 2 }}
-                />
-              </ReLineChart>
-            </ResponsiveContainer>
+            <LineChart width={400} height={300} data={revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
+              <XAxis dataKey="month" stroke="var(--muted)" fontSize={12} />
+              <YAxis 
+                stroke="var(--muted)" 
+                fontSize={12}
+                tickFormatter={(value: number) => `${(value / 1000000).toFixed(0)}M`}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'var(--surface)', 
+                  border: '1px solid var(--line)',
+                  borderRadius: '8px'
+                }}
+                formatter={(value: number) => [`IDR ${value.toLocaleString()}`, 'Revenue']}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="revenue" 
+                stroke="var(--sky)" 
+                strokeWidth={3}
+                dot={{ fill: 'var(--sky)', strokeWidth: 2, r: 4 }}
+                activeDot={{ r: 6, stroke: 'var(--sky)', strokeWidth: 2 }}
+              />
+            </LineChart>
           </div>
         </div>
 
         {/* Category Distribution */}
         <div className="card p-6">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <IconPieChart className="w-5 h-5 text-mint" />
+            <PieChart className="w-5 h-5 text-mint" />
             Events by Category
           </h3>
           <div className="h-80 flex items-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <RePieChart>
-                <Pie
-                  data={categoryData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={90}
-                  label={({ name, value }: { name: string; value: number }) => `${name} ${value}%`}
-                >
-                  {categoryData.map((_, index) => (
-                    <Cell
-                      key={index}
-                      fill={
-                        index === 0 ? 'var(--sky)'
-                        : index === 1 ? 'var(--mint)'
-                        : index === 2 ? 'var(--banana)'
-                        : 'var(--rose)'
-                      }
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'var(--surface)',
-                    border: '1px solid var(--line)',
-                    borderRadius: '8px'
-                  }}
-                  formatter={(value: any) => [
-                    `${value}% (${formatIDR(
-                      categoryData.find(d => d.value === Number(value))?.revenue ?? 0
-                    )})`,
-                    'Share'
-                  ]}
-                />
-              </RePieChart>
-            </ResponsiveContainer>
+            <RechartsPieChart width={400} height={300}>
+              <Pie
+                data={categoryData}
+                cx={200}
+                cy={150}
+                outerRadius={80}
+                fill="var(--mint)"
+                dataKey="value"
+                label={(props) => `${props.name} ${props.value}%`}
+              >
+                {categoryData.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={index === 0 ? 'var(--sky)' : index === 1 ? 'var(--mint)' : index === 2 ? 'var(--banana)' : 'var(--rose)'}
+                  />
+                ))}
+              </Pie>
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'var(--surface)', 
+                  border: '1px solid var(--line)',
+                  borderRadius: '8px'
+                }}
+                formatter={(value: number, name: string) => [
+                  `${value}% (IDR ${categoryData.find(d => d.value === value)?.revenue.toLocaleString()})`, 
+                  'Share'
+                ]}
+              />
+            </RechartsPieChart>
           </div>
         </div>
       </div>
@@ -329,22 +349,20 @@ const OrganizerDashboard: React.FC = () => {
           Registration Performance vs Targets
         </h3>
         <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <ReBarChart data={registrationTrends} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
-              <XAxis dataKey="date" stroke="var(--muted)" fontSize={12} />
-              <YAxis stroke="var(--muted)" fontSize={12} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'var(--surface)',
-                  border: '1px solid var(--line)',
-                  borderRadius: '8px'
-                }}
-              />
-              <Bar dataKey="target" fill="var(--line)" name="Target" />
-              <Bar dataKey="registrations" fill="var(--mint)" name="Actual" />
-            </ReBarChart>
-          </ResponsiveContainer>
+          <BarChart width={800} height={300} data={registrationTrends} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
+            <XAxis dataKey="date" stroke="var(--muted)" fontSize={12} />
+            <YAxis stroke="var(--muted)" fontSize={12} />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: 'var(--surface)', 
+                border: '1px solid var(--line)',
+                borderRadius: '8px'
+              }}
+            />
+            <Bar dataKey="target" fill="var(--line)" name="Target" />
+            <Bar dataKey="registrations" fill="var(--mint)" name="Actual" />
+          </BarChart>
         </div>
       </div>
 
@@ -385,7 +403,7 @@ const OrganizerDashboard: React.FC = () => {
                   <h4 className="font-medium">{event.name}</h4>
                   <div className="flex items-center gap-4 text-sm text-muted">
                     <span>{event.registrations}/{event.totalSeats} seats</span>
-                    <span>{formatIDR(event.revenue)}</span>
+                    <span>IDR {event.revenue.toLocaleString()}</span>
                     {event.rating > 0 && (
                       <div className="flex items-center gap-1">
                         <Star className="w-3 h-3 text-banana fill-current" />
@@ -401,10 +419,10 @@ const OrganizerDashboard: React.FC = () => {
                     {Math.round((event.registrations / event.totalSeats) * 100)}% filled
                   </div>
                   <div className="w-24 h-2 bg-line rounded-full overflow-hidden">
-                    <div
+                    <div 
                       className="h-full bg-mint transition-all"
                       style={{ width: `${(event.registrations / event.totalSeats) * 100}%` }}
-                    />
+                    ></div>
                   </div>
                 </div>
                 <span className={`chip ${getStatusColor(event.status)}`}>
@@ -419,25 +437,25 @@ const OrganizerDashboard: React.FC = () => {
   );
 
   // Events Tab
-  const EventsContent: React.FC = () => (
+  const EventsContent = () => (
     <div className="space-y-6">
       {/* Header Actions */}
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex gap-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted w-4 h-4" />
             <input
               type="text"
               placeholder="Search events..."
               value={searchQuery}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 pr-4 py-2 border border-line rounded-lg focus:ring-2 focus:ring-sky focus:border-sky bg-surface"
             />
           </div>
-
+          
           <select
             value={filterStatus}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterStatus(e.target.value as 'all' | EventStatus)}
+            onChange={(e) => setFilterStatus(e.target.value)}
             className="px-3 py-2 border border-line rounded-lg focus:ring-2 focus:ring-sky focus:border-sky bg-surface"
           >
             <option value="all">All Status</option>
@@ -458,8 +476,8 @@ const OrganizerDashboard: React.FC = () => {
         {filteredEvents.map(event => (
           <div key={event.id} className="card overflow-hidden hover-lift">
             <div className="h-48 bg-gradient-to-br from-sky to-mint relative overflow-hidden">
-              <img
-                src={event.imageUrl}
+              <img 
+                src={event.imageUrl} 
                 alt={event.name}
                 className="w-full h-full object-cover"
               />
@@ -469,7 +487,7 @@ const OrganizerDashboard: React.FC = () => {
                 </span>
               </div>
             </div>
-
+            
             <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <span className="chip chip-sky text-xs">{event.category}</span>
@@ -480,13 +498,13 @@ const OrganizerDashboard: React.FC = () => {
                   </div>
                 )}
               </div>
-
+              
               <h3 className="font-semibold mb-2 line-clamp-2">{event.name}</h3>
-
+              
               <div className="space-y-1 text-sm text-muted mb-4">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
-                  {new Date(event.startDate).toLocaleDateString('id-ID')}
+                  {new Date(event.startDate).toLocaleDateString()}
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
@@ -497,28 +515,27 @@ const OrganizerDashboard: React.FC = () => {
                   {event.registrations}/{event.totalSeats} registered
                 </div>
               </div>
-
+              
               <div className="flex items-center justify-between">
                 <div className="text-sm">
                   <span className="font-semibold">
-                    {event.price === 0 ? 'Free' : formatIDR(event.price)}
+                    {event.price === 0 ? 'Free' : `IDR ${event.price.toLocaleString()}`}
                   </span>
                   <div className="text-xs text-muted">
-                    Revenue: {formatIDR(event.revenue)}
+                    Revenue: IDR {event.revenue.toLocaleString()}
                   </div>
                 </div>
-
+                
                 <div className="flex gap-1">
-                  <button className="p-2 hover:bg-mint-tint rounded-lg transition-colors" title="Preview">
+                  <button className="p-2 hover:bg-mint-tint rounded-lg transition-colors">
                     <Eye className="w-4 h-4 text-muted" />
                   </button>
-                  <button className="p-2 hover:bg-sky-tint rounded-lg transition-colors" title="Edit">
+                  <button className="p-2 hover:bg-sky-tint rounded-lg transition-colors">
                     <Edit className="w-4 h-4 text-muted" />
                   </button>
-                  <button
+                  <button 
                     onClick={() => setShowDeleteConfirm(event.id)}
                     className="p-2 hover:bg-rose-tint rounded-lg transition-colors"
-                    title="Delete"
                   >
                     <Trash2 className="w-4 h-4 text-muted" />
                   </button>
@@ -536,9 +553,10 @@ const OrganizerDashboard: React.FC = () => {
           </div>
           <h3 className="text-lg font-medium mb-2">No events found</h3>
           <p className="text-muted mb-4">
-            {searchQuery || filterStatus !== 'all'
+            {searchQuery || filterStatus !== 'all' 
               ? 'Try adjusting your search or filter criteria'
-              : 'Create your first event to get started'}
+              : 'Create your first event to get started'
+            }
           </p>
           <button className="btn btn-primary">
             <Plus className="w-4 h-4" />
@@ -550,7 +568,7 @@ const OrganizerDashboard: React.FC = () => {
   );
 
   // Transactions Tab
-  const TransactionsContent: React.FC = () => (
+  const TransactionsContent = () => (
     <div className="space-y-6">
       <div className="card p-6">
         <h3 className="text-lg font-semibold mb-4">Recent Transactions</h3>
@@ -567,47 +585,47 @@ const OrganizerDashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y hairline">
-              {transactions.map(tx => (
-                <tr key={tx.id} className="hover:bg-mint-tint transition-colors">
+              {transactions.map(transaction => (
+                <tr key={transaction.id} className="hover:bg-mint-tint transition-colors">
                   <td className="py-4">
                     <div>
-                      <div className="font-medium">{tx.customerName}</div>
-                      <div className="text-sm text-muted">{tx.email}</div>
+                      <div className="font-medium">{transaction.customerName}</div>
+                      <div className="text-sm text-muted">{transaction.email}</div>
                     </div>
                   </td>
                   <td className="py-4">
-                    <div className="font-medium">{tx.eventName}</div>
-                    <div className="text-sm text-muted">{tx.ticketCount} tickets</div>
+                    <div className="font-medium">{transaction.eventName}</div>
+                    <div className="text-sm text-muted">{transaction.ticketCount} tickets</div>
                   </td>
                   <td className="py-4">
-                    <div className="font-medium">{formatIDR(tx.totalAmount)}</div>
+                    <div className="font-medium">IDR {transaction.totalAmount.toLocaleString()}</div>
                   </td>
                   <td className="py-4">
-                    <span className={`chip ${getTransactionStatusColor(tx.status)}`}>
-                      {tx.status.replace('_', ' ')}
+                    <span className={`chip ${getTransactionStatusColor(transaction.status)}`}>
+                      {transaction.status.replace('_', ' ')}
                     </span>
                   </td>
                   <td className="py-4 text-sm text-muted">
-                    {new Date(tx.createdAt).toLocaleDateString('id-ID')}
-                    {tx.expiresAt && (
+                    {new Date(transaction.createdAt).toLocaleDateString()}
+                    {transaction.expiresAt && (
                       <div className="text-xs text-rose">
-                        Expires: {new Date(tx.expiresAt).toLocaleString('id-ID')}
+                        Expires: {new Date(transaction.expiresAt).toLocaleString()}
                       </div>
                     )}
                   </td>
                   <td className="py-4">
                     <div className="flex gap-1">
-                      {tx.status === 'WAITING_CONFIRMATION' && (
+                      {transaction.status === 'WAITING_CONFIRMATION' && (
                         <>
                           <button
-                            onClick={() => handleTransactionAction(tx.id, 'approve')}
+                            onClick={() => handleTransactionAction(transaction.id, 'approve')}
                             className="p-2 hover:bg-mint-tint rounded-lg transition-colors"
                             title="Approve"
                           >
                             <CheckCircle className="w-4 h-4 text-mint" />
                           </button>
                           <button
-                            onClick={() => handleTransactionAction(tx.id, 'reject')}
+                            onClick={() => handleTransactionAction(transaction.id, 'reject')}
                             className="p-2 hover:bg-rose-tint rounded-lg transition-colors"
                             title="Reject"
                           >
@@ -615,9 +633,9 @@ const OrganizerDashboard: React.FC = () => {
                           </button>
                         </>
                       )}
-                      {tx.paymentProof && (
+                      {transaction.paymentProof && (
                         <button
-                          onClick={() => window.open(`/proofs/${tx.paymentProof}`, '_blank')}
+                          onClick={() => window.open(`/proofs/${transaction.paymentProof}`, '_blank')}
                           className="p-2 hover:bg-sky-tint rounded-lg transition-colors"
                           title="View Payment Proof"
                         >
@@ -636,7 +654,7 @@ const OrganizerDashboard: React.FC = () => {
   );
 
   // Analytics Tab
-  const AnalyticsContent: React.FC = () => (
+  const AnalyticsContent = () => (
     <div className="space-y-6">
       <div className="grid md:grid-cols-2 gap-6">
         {/* Revenue Chart Placeholder */}
@@ -657,7 +675,7 @@ const OrganizerDashboard: React.FC = () => {
         {/* Event Performance */}
         <div className="card p-6">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <IconPieChart className="w-5 h-5" />
+            <PieChart className="w-5 h-5" />
             Event Performance
           </h3>
           <div className="space-y-4">
@@ -671,10 +689,10 @@ const OrganizerDashboard: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-24 h-2 bg-line rounded-full overflow-hidden">
-                    <div
+                    <div 
                       className="h-full bg-mint transition-all"
                       style={{ width: `${(event.registrations / event.totalSeats) * 100}%` }}
-                    />
+                    ></div>
                   </div>
                   <span className="text-xs font-medium">
                     {Math.round((event.registrations / event.totalSeats) * 100)}%
@@ -694,7 +712,6 @@ const OrganizerDashboard: React.FC = () => {
             <h4 className="font-medium mb-3">Top Performing Events</h4>
             <div className="space-y-2">
               {events
-                .slice()
                 .sort((a, b) => b.registrations - a.registrations)
                 .slice(0, 3)
                 .map((event, index) => (
@@ -707,7 +724,8 @@ const OrganizerDashboard: React.FC = () => {
                       <div className="text-xs text-muted">{event.registrations} registrations</div>
                     </div>
                   </div>
-                ))}
+                ))
+              }
             </div>
           </div>
 
@@ -715,19 +733,20 @@ const OrganizerDashboard: React.FC = () => {
             <h4 className="font-medium mb-3">Revenue by Category</h4>
             <div className="space-y-2">
               {Object.entries(
-                events.reduce<Record<string, number>>((acc, event) => {
+                events.reduce((acc: Record<string, number>, event) => {
                   acc[event.category] = (acc[event.category] || 0) + event.revenue;
                   return acc;
                 }, {})
               )
-                .sort(([, a], [, b]) => Number(b) - Number(a))
+                .sort(([,a], [,b]) => (b as number) - (a as number))
                 .slice(0, 3)
                 .map(([category, revenue]) => (
                   <div key={category} className="flex justify-between">
                     <span className="text-sm">{category}</span>
-                    <span className="text-sm font-medium">{formatIDR(Number(revenue))}</span>
+                    <span className="text-sm font-medium">IDR {(revenue as number).toLocaleString()}</span>
                   </div>
-                ))}
+                ))
+              }
             </div>
           </div>
 
@@ -736,7 +755,6 @@ const OrganizerDashboard: React.FC = () => {
             <div className="space-y-2">
               {events
                 .filter(e => e.rating > 0)
-                .slice()
                 .sort((a, b) => b.rating - a.rating)
                 .slice(0, 3)
                 .map(event => (
@@ -747,7 +765,8 @@ const OrganizerDashboard: React.FC = () => {
                       <span className="text-sm font-medium">{event.rating}</span>
                     </div>
                   </div>
-                ))}
+                ))
+              }
             </div>
           </div>
         </div>
@@ -755,12 +774,12 @@ const OrganizerDashboard: React.FC = () => {
     </div>
   );
 
-  const tabs: { id: 'overview' | 'events' | 'transactions' | 'analytics'; name: string; icon: React.ElementType }[] = [
+  const tabs = [
     { id: 'overview', name: 'Overview', icon: BarChart3 },
     { id: 'events', name: 'Events', icon: Calendar },
-    { id: 'transactions', name: 'Transactions', icon: Banknote },
+    { id: 'transactions', name: 'Transactions', icon: DollarSign },
     { id: 'analytics', name: 'Analytics', icon: TrendingUp }
-  ];
+  ] as const;
 
   return (
     <div className="min-h-screen bg-cream py-8">
