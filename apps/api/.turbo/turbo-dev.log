@@ -1,0 +1,11 @@
+
+> api@1.0.0 dev
+> nodemon src/server.ts
+
+[1G[0K[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src/**/*[39m
+[33m[nodemon] watching extensions: ts[39m
+[32m[nodemon] starting `ts-node src/server.ts src/server.ts`[39m
+🚀 Server running on port 5000
+📊 Environment: development
