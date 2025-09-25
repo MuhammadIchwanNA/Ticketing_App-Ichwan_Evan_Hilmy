@@ -1,17 +1,22 @@
 {
+  "name": "ticketing-app",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "npm@11.6.0",
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
+    "dev:all": "turbo run dev --parallel",
+    "build:all": "turbo run build",
+    "lint:all": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "db:generate": "turbo db:generate",
-    "db:push": "turbo db:push"
+    "check-types": "turbo run check-types"
   },
   "devDependencies": {
-    "turbo": "^2.5.6"
+    "turbo": "^2.5.8"
   },
-  "packageManager": "npm@11.6.0",
   "dependencies": {
-    "recharts": "^3.2.1"
+    "lucide-react": "^0.544.0"
   }
 }
