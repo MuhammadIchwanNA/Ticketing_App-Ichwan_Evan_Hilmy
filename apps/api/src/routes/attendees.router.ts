@@ -5,7 +5,7 @@ import { authenticate, authorize } from "../middleware/auth";
 const router = Router();
 
 router.get(
-  "/events/:eventId/attendees",
+  "/events/:eventId",
   authenticate,
   authorize("ORGANIZER"),
   attendeeController.getAttendees

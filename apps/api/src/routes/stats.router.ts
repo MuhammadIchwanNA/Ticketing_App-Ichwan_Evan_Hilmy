@@ -5,7 +5,7 @@ import { authenticate, authorize } from "../middleware/auth";
 const router = Router();
 
 router.get(
-  "/events/:eventId",
+  "/events/",
   authenticate,
   authorize("ORGANIZER"),
   statsController.getRegistrationTrends

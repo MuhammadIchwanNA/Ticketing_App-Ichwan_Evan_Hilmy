@@ -1,8 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-
-/**
- * List transactions for an organizer's event
- */
 const prisma = new PrismaClient();
 
 /**
@@ -46,14 +42,10 @@ export async function createTransaction(
   return transaction;
 }
 
-export async function getTransactions(organizerId: string, eventId?: string) {
-  const where: any = {
-    event: { organizerId },
-  };
-  if (eventId) where.eventId = eventId;
+export async function getTransactions(eventId: string) {
 
   return prisma.transaction.findMany({
-    where,
+    where: { eventId: eventId},
     include: {
       user: { select: { id: true, name: true, email: true } },
       event: { select: { id: true, name: true } },
@@ -76,8 +68,6 @@ export async function acceptTransaction(
 
   if (!tx) throw new Error("Transaction not found");
   if (tx.event.organizerId !== organizerId) throw new Error("Unauthorized");
-  if (tx.status !== "WAITING_CONFIRMATION")
-    throw new Error("Transaction cannot be accepted");
 
   return prisma.transaction.update({
     where: { id: transactionId },
@@ -103,8 +93,7 @@ export async function rejectTransaction(
 
   if (!tx) throw new Error("Transaction not found");
   if (tx.event.organizerId !== organizerId) throw new Error("Unauthorized");
-  if (tx.status !== "WAITING_CONFIRMATION")
-    throw new Error("Transaction cannot be rejected");
+
 
   return prisma.transaction.update({
     where: { id: transactionId },
@@ -121,7 +110,6 @@ export async function rejectTransaction(
  */
 export async function getPaymentProof(
   transactionId: string,
-  organizerId: string
 ) {
   const tx = await prisma.transaction.findUnique({
     where: { id: transactionId },
@@ -129,7 +117,6 @@ export async function getPaymentProof(
   });
 
   if (!tx) throw new Error("Transaction not found");
-  if (tx.event.organizerId !== organizerId) throw new Error("Unauthorized");
 
   return tx.paymentProof;
 }
