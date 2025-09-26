@@ -32,13 +32,15 @@ export default function Navbar() {
     router.push("/");
   };
 
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <header className="bg-cream border-b hairline sticky top-0 z-50 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
           <span className="inline-grid place-items-center h-7 w-7 rounded-full border hairline bg-gradient-to-br from-[var(--mint)] to-[var(--sky)]">
-            <span className="text-xs font-bold text-[var(--ink)]">E</span>
+            <span className="text-xs font-bold text-[var(--foreground)]">E</span>
           </span>
           <span className="font-semibold tracking-tight text-gradient">Enjoyor</span>
         </Link>
@@ -47,8 +49,8 @@ export default function Navbar() {
         <nav className="hidden md:flex items-center gap-6">
           <Link
             href="/events"
-            className={`text-sm font-medium transition-colors hover:text-[var(--ink)] ${
-              pathname === "/events" ? "text-[var(--ink)]" : "text-muted"
+            className={`text-sm font-medium transition-colors hover:text-[var(--foreground)] ${
+              pathname === "/" ? "text-[var(--foreground)]" : "text-muted"
             }`}
           >
             Browse Events
@@ -60,9 +62,9 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/dashboard/events/create"
-                    className={`text-sm font-medium transition-colors hover:text-[var(--ink)] ${
+                    className={`text-sm font-medium transition-colors hover:text-[var(--foreground)] ${
                       pathname.includes("/dashboard/events/create")
-                        ? "text-[var(--ink)]"
+                        ? "text-[var(--foreground)]"
                         : "text-muted"
                     }`}
                   >
@@ -70,8 +72,8 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/dashboard"
-                    className={`text-sm font-medium transition-colors hover:text-[var(--ink)] ${
-                      pathname === "/dashboard" ? "text-[var(--ink)]" : "text-muted"
+                    className={`text-sm font-medium transition-colors hover:text-[var(--foreground)] ${
+                      pathname === "/dashboard" ? "text-[var(--foreground)]" : "text-muted"
                     }`}
                   >
                     Dashboard
@@ -82,16 +84,16 @@ export default function Navbar() {
               <div className="flex items-center gap-3">
                 <Link
                   href="/profile"
-                  className={`text-sm font-medium transition-colors hover:text-[var(--ink)] ${
-                    pathname === "/profile" ? "text-[var(--ink)]" : "text-muted"
+                  className={`text-sm font-medium transition-colors hover:text-[var(--foreground)] ${
+                    pathname === "/profile" ? "text-[var(--foreground)]" : "text-muted"
                   }`}
                 >
                   Profile
                 </Link>
 
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-sky-tint rounded-full">
-                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[var(--rose)] to-[var(--banana)] flex items-center justify-center">
-                    <span className="text-xs font-semibold text-[var(--ink)]">
+                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-rose-400 to-yellow-400 flex items-center justify-center">
+                    <span className="text-xs font-semibold text-white">
                       {userName.charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -107,7 +109,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               <Link
                 href="/auth"
-                className="text-sm font-medium text-muted hover:text-[var(--ink)] transition-colors"
+                className="text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors"
               >
                 Login
               </Link>
@@ -136,12 +138,12 @@ export default function Navbar() {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden border-t hairline bg-card">
+        <div className="md:hidden border-t hairline bg-white">
           <div className="px-4 py-4 space-y-3">
             <Link
-              href="/events"
-              className="block text-sm font-medium text-muted hover:text-[var(--ink)] transition-colors"
-              onClick={() => setIsMenuOpen(false)}
+              href="/"
+              className="block text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors"
+              onClick={closeMenu}
             >
               Browse Events
             </Link>
@@ -152,15 +154,15 @@ export default function Navbar() {
                   <>
                     <Link
                       href="/dashboard/events/create"
-                      className="block text-sm font-medium text-muted hover:text-[var(--ink)] transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors"
+                      onClick={closeMenu}
                     >
                       Create Event
                     </Link>
                     <Link
                       href="/dashboard"
-                      className="block text-sm font-medium text-muted hover:text-[var(--ink)] transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors"
+                      onClick={closeMenu}
                     >
                       Dashboard
                     </Link>
@@ -168,8 +170,8 @@ export default function Navbar() {
                 )}
 
                 <div className="flex items-center gap-2 py-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[var(--rose)] to-[var(--banana)] flex items-center justify-center">
-                    <span className="text-xs font-semibold text-[var(--ink)]">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-rose-400 to-yellow-400 flex items-center justify-center">
+                    <span className="text-xs font-semibold text-white">
                       {userName.charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -179,18 +181,18 @@ export default function Navbar() {
 
                 <Link
                   href="/profile"
-                  className="block text-sm font-medium text-muted hover:text-[var(--ink)] transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors"
+                  onClick={closeMenu}
                 >
                   Profile
                 </Link>
 
                 <button
                   onClick={() => {
-                    setIsMenuOpen(false);
+                    closeMenu();
                     handleLogout();
                   }}
-                  className="block w-full text-left text-sm font-medium text-muted hover:text-[var(--ink)] transition-colors"
+                  className="block w-full text-left text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors"
                 >
                   Logout
                 </button>
@@ -199,15 +201,15 @@ export default function Navbar() {
               <div className="flex items-center gap-3">
                 <Link
                   href="/auth"
-                  className="text-sm font-medium text-muted hover:text-[var(--ink)] transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
+                  className="text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors"
+                  onClick={closeMenu}
                 >
                   Login
                 </Link>
                 <Link
                   href="/auth?view=register"
                   className="btn btn-primary text-sm"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                 >
                   Sign Up
                 </Link>
