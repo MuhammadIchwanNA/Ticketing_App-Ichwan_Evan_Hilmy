@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { subYears, subWeeks, subDays } from "date-fns";
+import { subYears, subWeeks, subDays, startOfDay, startOfWeek, startOfYear } from "date-fns";
 
 const prisma = new PrismaClient();
 
@@ -7,14 +7,14 @@ export async function getRegistrationTrends(
   organizerId: string,
   range: string
 ) {
-  // Set time range
+  // Compute start date (last 3 buckets back)
   let startDate: Date;
   if (range === "year") {
-    startDate = subYears(new Date(), 3); // last 3 years
+    startDate = subYears(new Date(), 2); // 3 years: current + last + last 2
   } else if (range === "week") {
-    startDate = subWeeks(new Date(), 3); // last 3 weeks
+    startDate = subWeeks(new Date(), 2); // last 3 weeks
   } else if (range === "day") {
-    startDate = subDays(new Date(), 6); // last 7 days
+    startDate = subDays(new Date(), 2); // last 3 days
   } else {
     throw new Error("Invalid range. Use year | week | day");
   }
@@ -27,41 +27,56 @@ export async function getRegistrationTrends(
       event: { organizerId },
     },
     select: {
-      id: true,
       createdAt: true,
     },
   });
 
-  // Group into buckets
-  const grouped: Record<string, number> = {};
+  // Initialize buckets
+  const buckets: { [key: string]: number } = {
+    "Last 2": 0,
+    "Last": 0,
+    "Current": 0,
+  };
 
   for (const tx of transactions) {
-    let key: string;
+    let bucket: string;
 
     if (range === "year") {
       const diff = new Date().getFullYear() - tx.createdAt.getFullYear();
-      key = `Year ${diff === 0 ? 1 : diff + 1}`;
+      if (diff === 2) bucket = "Last 2";
+      else if (diff === 1) bucket = "Last";
+      else bucket = "Current";
     } else if (range === "week") {
-      // get ISO week number
-      const weekNum = Math.ceil(
-        (tx.createdAt.getDate() - tx.createdAt.getDay() + 1) / 7
-      );
-      key = `Week ${weekNum}`;
+      const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+      const lastWeekStart = subWeeks(currentWeekStart, 1);
+      const last2WeekStart = subWeeks(currentWeekStart, 2);
+
+      if (tx.createdAt >= currentWeekStart) bucket = "Current";
+      else if (tx.createdAt >= lastWeekStart) bucket = "Last";
+      else bucket = "Last 2";
     } else {
-      const dayDiff = Math.floor(
-        (new Date().getTime() - tx.createdAt.getTime()) / (1000 * 60 * 60 * 24)
-      );
-      key = `Day ${dayDiff === 0 ? 1 : dayDiff + 1}`;
+      const todayStart = startOfDay(new Date());
+      const yesterdayStart = subDays(todayStart, 1);
+      const dayBeforeStart = subDays(todayStart, 2);
+
+      if (tx.createdAt >= todayStart) bucket = "Current";
+      else if (tx.createdAt >= yesterdayStart) bucket = "Last";
+      else bucket = "Last 2";
     }
 
-    grouped[key] = (grouped[key] || 0) + 1;
+    buckets[bucket] = (buckets[bucket] || 0) + 1;
   }
 
-  // Convert to sorted array
-  return Object.entries(grouped)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([date, registrations]) => ({
-      date,
-      registrations,
-    }));
+  // Format final output with nice labels
+  const labelMap: Record<string, string> = {
+    year: "Year",
+    week: "Week",
+    day: "Day",
+  };
+
+  return [
+    { date: `Last 2 ${labelMap[range]}`, registrations: buckets["Last 2"] },
+    { date: `Last ${labelMap[range]}`, registrations: buckets["Last"] },
+    { date: `Current ${labelMap[range]}`, registrations: buckets["Current"] },
+  ];
 }

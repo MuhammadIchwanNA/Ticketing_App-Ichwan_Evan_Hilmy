@@ -1,23 +1,58 @@
+import api from "../../lib/axios";
+
+type FormData = {
+  name: string;
+  description: string;
+  price: number;
+  startDate: string;
+  endDate: string;
+  totalSeats: number;
+  location: string;
+  category: string;
+  imageUrl: string;
+};
+
+interface EditModalProps {
+  showEditModal: string | null;
+  setShowEditModal: React.Dispatch<React.SetStateAction<string | null>>;
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+}
+
 const EditModal = ({
   showEditModal,
   setShowEditModal,
   formData,
   setFormData,
-}) => {
+}: EditModalProps) => {
   const handleCloseModal = () => {
     setShowEditModal(null);
   };
 
-  // Handle update (call API later)
+  // Handle update (call API)
   const handleUpdateEvent = async (
     eventId: string,
     updatedData: typeof formData
   ) => {
-    console.log("Updating event:", eventId, updatedData);
+    try {
+      await api.put(`/events/${eventId}`, {
+        name: updatedData.name,
+        description: updatedData.description,
+        price: updatedData.price,
+        startDate: updatedData.startDate,
+        endDate: updatedData.endDate,
+        totalSeats: updatedData.totalSeats,
+        location: updatedData.location,
+        category: updatedData.category,
+        imageUrl: updatedData.imageUrl,
+      });
 
-    // Example: update state locally (later replace with API call)
-
-    setShowEditModal(null); // close modal
+      window.location.reload();
+    } catch (err) {
+      console.error("Failed to update event:", err);
+    } finally {
+      setShowEditModal(null);
+    }
   };
 
   return (
@@ -25,7 +60,6 @@ const EditModal = ({
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div className="card p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <h3 className="text-lg font-semibold mb-4 text-center">Edit Event</h3>
-
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -197,4 +231,7 @@ const EditModal = ({
     )
   );
 };
+
 export default EditModal;
+
+

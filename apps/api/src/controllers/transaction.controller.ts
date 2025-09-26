@@ -42,10 +42,8 @@ export async function createTransaction(req: Request, res: Response) {
  */
 export async function getTransactions(req: Request, res: Response) {
   try {
-    const organizerId = req.user?.userId; // from auth middleware
     const eventId = req.query.eventId as string;
     const transactions = await transactionService.getTransactions(
-      organizerId as string,
       eventId
     );
     res.json(transactions);
@@ -71,22 +69,22 @@ export async function acceptTransaction(req: Request, res: Response) {
 
     if (!transaction) throw new Error("Transaction not found");
 
-    // // Prepare email data
-    // const mailParams = {
-    //   status: "accepted" as const,
-    //   eventName: transaction.event.name,
-    //   userName: transaction.user.name,
-    //   year: new Date().getFullYear(),
-    //   ticketCount: transaction.ticketCount,
-    // };
+    // Prepare email data
+    const mailParams = {
+      status: "accepted" as const,
+      eventName: transaction.event.name,
+      userName: transaction.user.name,
+      year: new Date().getFullYear(),
+      ticketCount: transaction.ticketCount,
+    };
 
-    // const html = generateTransactionEmail(mailParams);
+    const html = generateTransactionEmail(mailParams);
 
-    // await mailerHelper.sendMail(
-    //   transaction.user.email,
-    //   "Transaction Confirmed",
-    //   html
-    // );
+    await mailerHelper.sendMail(
+      transaction.user.email,
+      "Transaction Confirmed",
+      html
+    );
 
     res.json(transaction);
   } catch (err: any) {
@@ -111,21 +109,21 @@ export async function rejectTransaction(req: Request, res: Response) {
 
     if (!transaction) throw new Error("Transaction not found");
 
-    // const mailParams = {
-    //   status: "rejected" as const,
-    //   eventName: transaction.event.name,
-    //   userName: transaction.user.name,
-    //   year: new Date().getFullYear(),
-    //   ticketCount: transaction.ticketCount,
-    // };
+    const mailParams = {
+      status: "rejected" as const,
+      eventName: transaction.event.name,
+      userName: transaction.user.name,
+      year: new Date().getFullYear(),
+      ticketCount: transaction.ticketCount,
+    };
 
-    // const html = generateTransactionEmail(mailParams);
+    const html = generateTransactionEmail(mailParams);
 
-    // await mailerHelper.sendMail(
-    //   transaction.user.email,
-    //   "Transaction Rejected",
-    //   html
-    // );
+    await mailerHelper.sendMail(
+      transaction.user.email,
+      "Transaction Rejected",
+      html
+    );
 
     res.json(transaction);
   } catch (err: any) {
@@ -139,11 +137,9 @@ export async function rejectTransaction(req: Request, res: Response) {
  */
 export async function getPaymentProof(req: Request, res: Response) {
   try {
-    const organizerId = req.user?.userId;
     const transactionId = req.params.id;
     const proofUrl = await transactionService.getPaymentProof(
       transactionId,
-      organizerId as string
     );
 
     if (!proofUrl) {

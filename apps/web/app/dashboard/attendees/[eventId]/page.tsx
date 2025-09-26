@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import api from "../../../../lib/axios"; // 👈 make sure this points to your axios instance
 
 // Event type
 type Event = {
@@ -9,26 +10,26 @@ type Event = {
   name: string;
   description: string;
   price: number;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   availableSeats: number;
   totalSeats: number;
   location: string;
   category: string;
   imageUrl: string | null;
   organizerId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 // Attendee type
 type Attendee = {
-  attendeeId: number;
+  attendeeId: string;
   name: string;
   email: string;
   ticketCount: number;
   totalPaid: number;
-  confirmedAt: Date;
+  confirmedAt: string;
 };
 
 export default function EventAttendeesPage() {
@@ -36,51 +37,35 @@ export default function EventAttendeesPage() {
 
   const [event, setEvent] = useState<Event | null>(null);
   const [attendees, setAttendees] = useState<Attendee[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Dummy event data
-    const dummyEvent: Event = {
-      id: String(eventId),
-      name: "Tech Conference 2025",
-      description: "A conference about the latest in technology.",
-      price: 250000,
-      startDate: new Date("2025-10-15T09:00"),
-      endDate: new Date("2025-10-15T17:00"),
-      availableSeats: 50,
-      totalSeats: 100,
-      location: "Jakarta Convention Center",
-      category: "Technology",
-      imageUrl: "https://picsum.photos/600/300",
-      organizerId: "org-1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    const fetchEventAndAttendees = async () => {
+      try {
+        // Fetch events
+        const res = await api.get("/events/organizer/my-events");
+        const foundEvent = res.data.events.find((e: Event) => e.id === eventId);
+        setEvent(foundEvent || null);
+
+        // Fetch attendees for this event
+        const attRes = await api.get(`/attendees/events/${eventId}`);
+        setAttendees(attRes.data || []);
+      } catch (err: any) {
+        setError("Failed to load event or attendees.");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    // Dummy attendees
-    const dummyAttendees: Attendee[] = [
-      {
-        attendeeId: 1,
-        name: "John Doe",
-        email: "john@example.com",
-        ticketCount: 2,
-        totalPaid: 500000,
-        confirmedAt: new Date("2025-09-20T10:00"),
-      },
-      {
-        attendeeId: 2,
-        name: "Jane Smith",
-        email: "jane@example.com",
-        ticketCount: 1,
-        totalPaid: 250000,
-        confirmedAt: new Date("2025-09-22T14:30"),
-      },
-    ];
-
-    setEvent(dummyEvent);
-    setAttendees(dummyAttendees);
+    if (eventId) {
+      fetchEventAndAttendees();
+    }
   }, [eventId]);
 
-  if (!event) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+  if (!event) return <p>No event found.</p>;
 
   return (
     <div className="p-6 space-y-6">

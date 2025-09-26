@@ -8,6 +8,7 @@ import eventRoutes from "./routes/eventRoutes";
 import transactionRoutes from "./routes/transaction.router";
 import statsRoutes from "./routes/stats.router";
 import attendeesRoutes from "./routes/attendees.router";
+import reviewRoutes from "./routes/review.router"
 
 const app = express();
 
@@ -55,6 +56,9 @@ app.use("/api/stats", statsRoutes);
 
 // Attendees routes
 app.use("/api/attendees", attendeesRoutes);
+
+// Review routes
+app.use("/api/reviews", reviewRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
