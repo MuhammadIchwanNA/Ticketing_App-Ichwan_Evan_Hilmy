@@ -1,9 +1,10 @@
-'usec client';
+'use client';
 import React, { useState } from 'react';
 import {
   Calendar, MapPin, Users, Clock, Image as ImageIcon, Tag,
   Plus, X, Save, Eye, Banknote
 } from 'lucide-react';
+import { eventAPI } from '@/lib/api';
 
 interface Voucher {
   id: number;
@@ -100,26 +101,48 @@ const EventCreateDashboard: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const priceNum = Number(formData.price) || 0;
-      const totalSeatsNum = Number(formData.totalSeats) || 0;
-
-      const eventData = {
-        ...formData,
-        price: priceNum,
-        totalSeats: totalSeatsNum,
-        startDate: `${formData.startDate}T${formData.startTime}`,
-        endDate: `${formData.endDate}T${formData.endTime}`
-      };
-
-      console.log('Creating event:', eventData);
-      console.log('With vouchers:', vouchers);
-
-      alert('Event created successfully!');
-    } catch (error: unknown) {
-      alert('Error creating event: ' + (error as Error).message);
+  try {
+    // Validate required fields
+    if (!formData.name || !formData.description || !formData.category || 
+        !formData.location || !formData.startDate || !formData.endDate ||
+        !formData.startTime || !formData.endTime || !formData.totalSeats || 
+        formData.price === '') {
+      alert('Please fill in all required fields');
+      return;
     }
-  };
+
+    const priceNum = Number(formData.price) || 0;
+    const totalSeatsNum = Number(formData.totalSeats) || 0;
+
+    const eventData = {
+      name: formData.name,
+      description: formData.description,
+      category: formData.category,
+      location: formData.location,
+      price: priceNum,
+      totalSeats: totalSeatsNum,
+      startDate: `${formData.startDate}T${formData.startTime}:00.000Z`,
+      endDate: `${formData.endDate}T${formData.endTime}:00.000Z`,
+      imageUrl: formData.imageUrl || undefined
+    };
+
+    // Import eventAPI at the top of the file
+    const { eventAPI } = await import('@/lib/api');
+    
+    const response = await eventAPI.createEvent(eventData);
+    
+    alert('Event created successfully!');
+    
+    // Redirect to dashboard after 1 second
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    }, 1000);
+
+  } catch (error: any) {
+    console.error('Error creating event:', error);
+    alert('Error creating event: ' + error.message);
+  }
+};
 
   const togglePreview = () => {
     setFormData(prev => ({ ...prev, isPreview: !prev.isPreview }));

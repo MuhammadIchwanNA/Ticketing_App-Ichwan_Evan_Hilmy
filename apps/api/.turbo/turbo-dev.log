@@ -9,8 +9,12 @@
 [32m[nodemon] starting `ts-node src/server.ts src/server.ts`[39m
 🚀 Server running on port 5000
 📊 Environment: development
-::1 - - [26/Sep/2025:07:33:16 +0000] "GET /api/events?page=1&limit=6 HTTP/1.1" 200 115 "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
-::1 - - [26/Sep/2025:07:33:19 +0000] "GET /api/events?category=Business+%26+Professional&page=1&limit=6 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
-::1 - - [26/Sep/2025:07:33:21 +0000] "GET /api/events?category=Music&page=1&limit=6 HTTP/1.1" 200 115 "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
-::1 - - [26/Sep/2025:07:33:22 +0000] "GET /api/events?category=Food+%26+Drink&page=1&limit=6 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
-::1 - - [26/Sep/2025:07:33:23 +0000] "GET /api/events?page=1&limit=6 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:03:20 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:03:26 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:03:26 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:03:27 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:03:27 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:03:27 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:03:27 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:03:27 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:03:27 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
