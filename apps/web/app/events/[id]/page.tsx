@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { 
   Calendar, MapPin, Users, Clock, Star, Share2, 
   Heart, Bookmark, ArrowLeft, ExternalLink,
@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Event } from '@/types';
 import { eventAPI } from '@/lib/api';
+import TicketBooking from '@/components/booking/TicketBooking';
 
 interface EventDetails extends Event {
   reviews: Array<{
@@ -31,6 +32,7 @@ interface EventDetails extends Event {
 
 export default function EventDetailsPage() {
   const params = useParams();
+  const router = useRouter();
   const eventId = params.id as string;
   
   const [event, setEvent] = useState<EventDetails | null>(null);
@@ -39,6 +41,7 @@ export default function EventDetailsPage() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   useEffect(() => {
     fetchEventDetails();
@@ -374,6 +377,15 @@ export default function EventDetailsPage() {
                 <button
                   disabled={event.availableSeats === 0}
                   className="w-full btn btn-primary mb-4 disabled:opacity-50"
+                  onClick={() => {
+                    console.log('Book Now button clicked!');
+                    console.log('Available seats:', event.availableSeats);
+                    alert('Book Now clicked!'); // Debug alert
+                    if (event.availableSeats > 0) {
+                      console.log('Opening booking modal...');
+                      setShowBookingModal(true);
+                    }
+                  }}
                 >
                   {event.availableSeats === 0 ? 'Sold Out' : 'Book Now'}
                 </button>
@@ -451,6 +463,40 @@ export default function EventDetailsPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Booking Modal */}
+      {(() => {
+        console.log('Modal render check:', { showBookingModal, hasEvent: !!event });
+        return null;
+      })()}
+      {showBookingModal && event && (
+        <TicketBooking
+          event={{
+            id: event.id,
+            name: event.name,
+            description: event.description,
+            price: event.price,
+            startDate: event.startDate,
+            endDate: event.endDate,
+            location: event.location,
+            category: event.category,
+            imageUrl: event.imageUrl,
+            availableSeats: event.availableSeats,
+            totalSeats: event.totalSeats
+          }}
+          isOpen={showBookingModal}
+          onClose={() => {
+            console.log('Closing booking modal');
+            setShowBookingModal(false);
+          }}
+          onSuccess={(transactionId: string) => {
+            console.log('Booking successful:', transactionId);
+            setShowBookingModal(false);
+            // Redirect to payment page
+            router.push(`/payment/${transactionId}`);
+          }}
+        />
       )}
     </div>
   );

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Calendar, DollarSign, PieChart, Star, Users } from "lucide-react";
 import RegistrationTrendsChart from "./RegistrationsChart";
 import { Pie, Tooltip, Cell, PieChart as RechartsPieChart } from "recharts";
-import api from "../../lib/axios"; // adjust path if needed
+import { apiClient } from "../../lib/api";
 
 interface Event {
   id: string;
@@ -71,12 +71,11 @@ const categoryData: CategoryData[] = useMemo(() => {
       setLoading(true);
       setError(null);
       try {
-        const res = await api.get("/events/organizer/my-events");
-        const json = res.data;
+        const json = await apiClient.get("/api/events/organizer/my-events");
         setEvents(Array.isArray(json.events) ? json.events : []);
       } catch (err) {
-        console.error(err);
-        setError("No Events Created.");
+        console.error('Error fetching organizer events:', err);
+        setError("Could not load data. Please try again.");
         setEvents([]);
       } finally {
         setLoading(false);
@@ -90,7 +89,28 @@ const categoryData: CategoryData[] = useMemo(() => {
   }
 
   if (error) {
-    return <p className="text-red-500">{error}</p>;
+    return (
+      <div className="text-center py-12">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+          <h3 className="text-lg font-semibold text-red-800 mb-2">Unable to Load Dashboard</h3>
+          <p className="text-red-600 mb-4">{error}</p>
+          <div className="text-sm text-red-500">
+            <p>Please make sure you are:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1">
+              <li>Logged in as an organizer</li>
+              <li>Connected to the internet</li>
+              <li>Have proper permissions</li>
+            </ul>
+          </div>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

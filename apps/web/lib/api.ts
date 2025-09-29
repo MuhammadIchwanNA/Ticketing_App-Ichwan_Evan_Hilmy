@@ -15,14 +15,31 @@ export const apiClient = {
       ...options,
     };
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Network error' }));
-      throw new Error(error.message || 'API request failed');
-    }
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+      
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ message: 'Network error' }));
+        
+        // Handle validation errors with more detail
+        if (error.errors && Array.isArray(error.errors)) {
+          const errorMessages = error.errors.map((err: any) => err.msg).join(', ');
+          throw new Error(`Validation failed: ${errorMessages}`);
+        }
+        
+        throw new Error(error.message || 'API request failed');
+      }
 
-    return response.json();
+      return response.json();
+    } catch (fetchError) {
+      console.error(`Network Error for ${endpoint}:`, fetchError);
+      
+      if (fetchError instanceof TypeError) {
+        throw new Error('Network connection failed. Please check if the server is running.');
+      }
+      
+      throw fetchError;
+    }
   },
 
   get(endpoint: string) {

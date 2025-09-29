@@ -12,7 +12,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import api from "../../lib/axios";
+import { apiClient } from "../../lib/api";
 
 export const EventsContent = () => {
   const router = useRouter();
@@ -43,10 +43,11 @@ export const EventsContent = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await api.get("/events/organizer/my-events");
-        setEvents(res.data.events);
+        const res = await apiClient.get("/api/events/organizer/my-events");
+        setEvents(res.events);
       } catch (err: any) {
-        setError("No Events Created.");
+        console.error('Error fetching events:', err);
+        setError("Could not load data. Please try again.");
       } finally {
         setLoading(false);
       }

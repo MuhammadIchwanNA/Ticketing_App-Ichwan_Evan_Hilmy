@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import {Calendar, DollarSign, BarChart3} from "lucide-react";
+import {Calendar, DollarSign, BarChart3, Clock} from "lucide-react";
 import { OverviewContent } from "./OverviewContent";
 import { EventsContent } from "./EventContent";
 import { TransactionsContent } from "./TransactionContent";
+import { PendingApprovalsContent } from "./PendingApprovalsContent";
 
 const OrganizerDashboard = () => {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "events" | "transactions" 
+    "overview" | "events" | "transactions" | "approvals"
   >("overview");
 
   const tabs = [
     { id: "overview", name: "Overview", icon: BarChart3 },
     { id: "events", name: "Events", icon: Calendar },
-    { id: "transactions", name: "Transactions", icon: DollarSign },
+    { id: "approvals", name: "Pending Approvals", icon: Clock },
+    { id: "transactions", name: "All Transactions", icon: DollarSign },
   ] as const;
 
   return (
@@ -55,6 +57,7 @@ const OrganizerDashboard = () => {
         <div>
           {activeTab === "overview" && <OverviewContent />}
           {activeTab === "events" && <EventsContent />}
+          {activeTab === "approvals" && <PendingApprovalsContent />}
           {activeTab === "transactions" && <TransactionsContent />}
         </div>
 

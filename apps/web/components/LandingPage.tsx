@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Filter, X, MapPin, Calendar, DollarSign } from "lucide-react";
+import { MapPin, Calendar, DollarSign, Search, Filter, X } from "lucide-react";
+import TicketBooking from "./booking/TicketBooking";
+import SearchBar from "./SearchBar";
+import NoEventsFound from "./NoEventsFound";
 
 // Types
 interface Event {
@@ -411,7 +414,13 @@ const EnhancedSearchStrip = ({
   );
 };
 
-const EventCard = ({ event }: { event: Event }) => {
+const EventCard = ({ 
+  event, 
+  onBookClick 
+}: { 
+  event: Event; 
+  onBookClick?: (event: Event) => void; 
+}) => {
   const router = useRouter();
 
   const formatPrice = (price: number) => {
@@ -506,6 +515,17 @@ const EventCard = ({ event }: { event: Event }) => {
             {event.availableSeats} left
           </span>
         </div>
+        
+        {/* Book Now Button */}
+        <button
+          className="w-full mt-4 px-4 py-2 bg-tint text-white rounded-lg hover:bg-tint/90 transition-colors duration-200 font-medium"
+          onClick={(e) => {
+            e.stopPropagation();
+            onBookClick?.(event);
+          }}
+        >
+          Book Now
+        </button>
       </div>
     </div>
   );
@@ -564,6 +584,8 @@ export default function LandingPage() {
     dateEnd: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   const debouncedSearch = useDebounce(searchTerm, 300);
 
@@ -622,19 +644,26 @@ export default function LandingPage() {
     );
   };
 
+  const handleSearch = useCallback((query: string, category?: string, location?: string) => {
+    setSearchTerm(query);
+    setFilters(prev => ({
+      ...prev,
+      category: category || '',
+      location: location || ''
+    }));
+  }, []);
+
   return (
+    <>
     <main>
       {/* Search strip */}
       <section className="bg-cream border-b hairline">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <EnhancedSearchStrip
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            filters={filters}
-            setFilters={setFilters}
-            isSearching={loading}
-            onClearFilters={clearFilters}
-            hasActiveFilters={hasActiveFilters()}
+          <SearchBar
+            onSearch={handleSearch}
+            placeholder="Search events..."
+            categories={categories}
+            locations={["Jakarta", "Bandung", "Surabaya", "Yogyakarta", "Medan", "Semarang"]}
           />
         </div>
       </section>
@@ -723,7 +752,14 @@ export default function LandingPage() {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {events.map((event: Event) => (
-                    <EventCard key={event.id} event={event} />
+                    <EventCard 
+                      key={event.id} 
+                      event={event} 
+                      onBookClick={(event) => {
+                        setSelectedEvent(event);
+                        setShowBookingModal(true);
+                      }}
+                    />
                   ))}
                 </div>
 
@@ -776,15 +812,12 @@ export default function LandingPage() {
 
             {/* Empty State */}
             {!loading && !error && events.length === 0 && (
-              <div className="text-center py-12">
-                <h3 className="text-xl font-semibold mb-2">No events found</h3>
-                <p className="text-muted mb-6">
-                  Try adjusting your search criteria
-                </p>
-                <button onClick={clearFilters} className="btn btn-primary">
-                  Show all events
-                </button>
-              </div>
+              <NoEventsFound 
+                searchQuery={searchTerm}
+                category={filters.category}
+                location={filters.location}
+                onClearFilters={clearFilters} 
+              />
             )}
           </div>
         </div>
@@ -824,5 +857,24 @@ export default function LandingPage() {
         </div>
       </section>
     </main>
+
+    {/* Booking Modal */}
+    {showBookingModal && selectedEvent && (
+      <TicketBooking
+        event={selectedEvent}
+        isOpen={showBookingModal}
+        onClose={() => {
+          setShowBookingModal(false);
+          setSelectedEvent(null);
+        }}
+        onSuccess={(transactionId: string) => {
+          setShowBookingModal(false);
+          setSelectedEvent(null);
+          // Redirect to payment page
+          router.push(`/payment/${transactionId}`);
+        }}
+      />
+    )}
+    </>
   );
 }

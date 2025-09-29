@@ -5,10 +5,10 @@ import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import authRoutes from "./routes/authRoutes";
 import eventRoutes from "./routes/eventRoutes";
-import transactionRoutes from "./routes/transaction.router";
-import statsRoutes from "./routes/stats.router";
-import attendeesRoutes from "./routes/attendees.router";
-import reviewRoutes from "./routes/review.router"
+import transactionRoutes from "./routes/transactionRoutesNew";
+import reviewRoutes from "./routes/reviewRoutes";
+// import statsRoutes from "./routes/stats.router";  // Commented out - stats feature temporarily disabled
+// import attendeesRoutes from "./routes/attendees.router";  // Temporarily disabled for debugging
 
 const app = express();
 
@@ -25,7 +25,10 @@ app.use(helmet());
 // CORS
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: [
+      process.env.FRONTEND_URL || "http://localhost:3000",
+      "http://localhost:3001"
+    ],
     credentials: true,
   })
 );
@@ -51,14 +54,17 @@ app.use("/api/events", eventRoutes);
 // Transaction routes
 app.use("/api/transactions", transactionRoutes);
 
-// Stats routes
-app.use("/api/stats", statsRoutes);
-
-// Attendees routes
-app.use("/api/attendees", attendeesRoutes);
-
 // Review routes
 app.use("/api/reviews", reviewRoutes);
+
+// Stats routes  
+// app.use("/api/stats", statsRoutes);  // Commented out - stats feature temporarily disabled
+
+// Attendees routes - temporarily disabled for debugging
+// app.use("/api/attendees", attendeesRoutes);
+
+// Review routes - temporarily disabled for debugging
+// app.use("/api/reviews", reviewRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

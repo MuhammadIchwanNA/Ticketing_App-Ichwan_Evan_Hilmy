@@ -1,4 +1,17 @@
-import { body } from 'express-validator';
+import { body, validationResult } from 'express-validator';
+import { Request, Response, NextFunction } from 'express';
+
+// Validation middleware
+export const validate = (req: Request, res: Response, next: NextFunction) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      message: 'Validation error',
+      errors: errors.array()
+    });
+  }
+  next();
+};
 
 export const registerValidation = [
   body('email')

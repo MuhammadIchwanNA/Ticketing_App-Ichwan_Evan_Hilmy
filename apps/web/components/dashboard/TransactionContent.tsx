@@ -1,6 +1,6 @@
 import { CheckCircle, Eye, XCircle } from "lucide-react";
 import { useState, useEffect } from "react";
-import api from "../../lib/axios";
+import { apiClient } from "../../lib/api";
 
 interface Transaction {
   id: string;
@@ -27,30 +27,37 @@ export const TransactionsContent = () => {
     const fetchTransactions = async () => {
       try {
         // 1. Get organizer's events
-        const eventsRes = await api.get("/events/organizer/my-events");
-        const events = eventsRes.data.events;
+        const eventsRes = await apiClient.get("/api/events/organizer/my-events");
+        const events = eventsRes.events;
 
         let allTransactions: Transaction[] = [];
 
         // 2. For each event, fetch its transactions
         for (const event of events) {
-          const txRes = await api.get(`/transactions?eventId=${event.id}`);
-          const txs = txRes.data;
+          try {
+            const txRes = await apiClient.get(`/api/transactions?eventId=${event.id}`);
+            const txs = Array.isArray(txRes) ? txRes : [];
 
-          const mappedTxs: Transaction[] = txs.map((t: any) => ({
-            id: t.id,
-            eventName: t.event.name,
-            customerName: t.user.name,
-            email: t.user.email,
-            ticketCount: t.ticketCount,
-            totalAmount: t.totalAmount,
-            status: t.status,
-            paymentProof: t.paymentProof,
-            createdAt: t.createdAt,
-            expiresAt: t.expiresAt,
-          }));
+            const mappedTxs: Transaction[] = txs
+              .filter((t: any) => t && t.event && t.user) // Filter out invalid data
+              .map((t: any) => ({
+                id: t.id,
+                eventName: t.event?.name || 'Unknown Event',
+                customerName: t.user?.name || 'Unknown Customer',
+                email: t.user?.email || 'No email',
+                ticketCount: t.ticketCount || 0,
+                totalAmount: t.totalAmount || 0,
+                status: t.status,
+                paymentProof: t.paymentProof,
+                createdAt: t.createdAt,
+                expiresAt: t.expiresAt,
+              }));
 
-          allTransactions = [...allTransactions, ...mappedTxs];
+            allTransactions = [...allTransactions, ...mappedTxs];
+          } catch (eventError) {
+            console.error(`Error fetching transactions for event ${event.id}:`, eventError);
+            // Continue with next event
+          }
         }
 
         setTransactions(allTransactions);
@@ -82,11 +89,8 @@ export const TransactionsContent = () => {
     action: "approve" | "reject"
   ) => {
     try {
-      if (action === "approve") {
-        await api.put(`/transactions/${transactionId}/accept`);
-      } else {
-        await api.put(`/transactions/${transactionId}/reject`);
-      }
+      const actionData = { action: action === "approve" ? "confirm" : "reject" };
+      await apiClient.patch(`/api/transactions/${transactionId}/confirm`, actionData);
       // Refresh after action
       setTransactions((prev) =>
         prev.map((t) =>
@@ -106,7 +110,14 @@ export const TransactionsContent = () => {
   return (
     <div className="space-y-6">
       <div className="card p-6">
-        <h3 className="text-lg font-semibold mb-4">Recent Transactions</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold">All Transactions</h3>
+          <div className="flex gap-2 text-sm">
+            <span className="chip status-available">Confirmed</span>
+            <span className="chip status-limited">Pending</span>
+            <span className="chip status-sold-out">Rejected/Expired</span>
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="divide-y">

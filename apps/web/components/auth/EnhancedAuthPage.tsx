@@ -285,7 +285,8 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
         router.push('/');
       }, 1500);
     } catch (err: unknown) {
-      setError((err as Error)?.message || 'Registration failed');
+      const errorMessage = (err as Error)?.message || 'Registration failed';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -3,15 +3,15 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import api from "../../lib/axios"; // your axios/fetch wrapper
+import { apiClient } from "../../lib/api"; // your axios/fetch wrapper
 import { Star } from "lucide-react";
 
 type UnreviewedEvent = {
-  eventId: string;
+  id: string;
   name: string;
   description: string;
   endDate: string;
-  totalAmount: number;
+  totalAmount?: number;
 };
 
 export default function Review() {
@@ -23,16 +23,18 @@ export default function Review() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await api.get("/reviews");
-        console.log(res.data);
+        const res = await apiClient.get("/api/events");
+        console.log("API Response:", res);
         
-        setEvents(res.data.events || []);
+        setEvents(res.events || []);
       } catch (err) {
         console.error("Failed to fetch unreviewed events:", err);
       }
     }
     fetchEvents();
   }, []);
+
+
 
   const handleRating = (eventId: string, value: number) => {
     setRatings((prev) => ({ ...prev, [eventId]: value }));
@@ -41,14 +43,14 @@ export default function Review() {
   const handleSubmit = async (eventId: string) => {
     setLoading(true);
     try {
-      await api.post("/reviews/add-review", {
+      await apiClient.post("/api/reviews", {
         eventId,
         rating: ratings[eventId],
         comment: comments[eventId] || "",
       });
 
       // Remove event after submitting review
-      setEvents((prev) => prev.filter((e) => e.eventId !== eventId));
+      setEvents((prev) => prev.filter((e) => e.id !== eventId));
     } catch (err) {
       console.error("Failed to submit review:", err);
     } finally {
@@ -62,7 +64,7 @@ export default function Review() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
     {events.map((event) => (
-          <Card key={event.eventId} className="shadow-md rounded-2xl">
+          <Card key={event.id} className="shadow-md rounded-2xl">
             <CardHeader>
               <CardTitle>{event.name}</CardTitle>
               <p className="text-sm text-muted-foreground">{event.description}</p>
@@ -77,9 +79,9 @@ export default function Review() {
                   <Star
                     key={num}
                     className={`w-6 h-6 cursor-pointer ${
-                      ratings[event.eventId] >= num ? "text-yellow-400 fill-yellow-400" : "text-gray-400"
+                      ratings[event.id] >= num ? "text-yellow-400 fill-yellow-400" : "text-gray-400"
                     }`}
-                    onClick={() => handleRating(event.eventId, num)}
+                    onClick={() => handleRating(event.id, num)}
                   />
                 ))}
               </div>
@@ -87,17 +89,17 @@ export default function Review() {
               {/* Comment box */}
               <Textarea
                 placeholder="Write a comment..."
-                value={comments[event.eventId] || ""}
+                value={comments[event.id] || ""}
                 onChange={(e) =>
-                  setComments((prev) => ({ ...prev, [event.eventId]: e.target.value }))
+                  setComments((prev) => ({ ...prev, [event.id]: e.target.value }))
                 }
                 className="mb-3"
               />
 
               {/* Submit button */}
               <button
-                onClick={() => handleSubmit(event.eventId)}
-                disabled={loading || !ratings[event.eventId]}
+                onClick={() => handleSubmit(event.id)}
+                disabled={loading || !ratings[event.id]}
                 className="w-full"
               >
                 {loading ? "Submitting..." : "Submit Review"}
