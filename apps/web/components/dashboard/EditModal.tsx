@@ -220,7 +220,7 @@ const EditModal = ({
               </button>
               <button
                 type="submit"
-                className="btn bg-primary text-white hover:bg-primary/90"
+                className="btn btn-ghost bg-primary hover:bg-primary/90"
               >
                 Save Changes
               </button>

@@ -7,6 +7,6 @@ const api = axios.create({
   withCredentials: true, // optional if you need cookies / auth
 });
 
-api.defaults.headers.common["Authorization"] = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWZ4cms1M20wMDAwdDdpemVwMjA4enRzIiwiZW1haWwiOiJvcmdhbml6ZXIxQGdtYWlsLmNvbSIsInJvbGUiOiJPUkdBTklaRVIiLCJpYXQiOjE3NTg3ODY1MTEsImV4cCI6MTc1OTM5MTMxMX0.hS1pfPH9R6yFQSRY1ucvzQMyTu3hdOtNgpnC6T3SjU4`;
+api.defaults.headers.common["Authorization"] = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWZ4cms1M20wMDAwdDdpemVwMjA4enRzIiwiZW1haWwiOiJvcmdhbml6ZXIxQGdtYWlsLmNvbSIsInJvbGUiOiJPUkdBTklaRVIiLCJpYXQiOjE3NTkxMjg3NTksImV4cCI6MTc1OTczMzU1OX0.m-izmwtG3XSl3vArr4LgqrsCiSUnY2k7kNJSBgTcXUY`;
 
 export default api;

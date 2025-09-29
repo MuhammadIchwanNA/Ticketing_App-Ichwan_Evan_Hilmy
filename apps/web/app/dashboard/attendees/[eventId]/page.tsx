@@ -2,7 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import api from "../../../../lib/axios"; // 👈 make sure this points to your axios instance
+import api from "../../../../lib/axios";
+import OrganizerDashboard from "@/components/dashboard/OrganizerDashboard";
+import EventReviewsPage from "@/components/dashboard/EventReview";
 
 // Event type
 type Event = {
@@ -144,6 +146,7 @@ export default function EventAttendeesPage() {
           </div>
         )}
       </div>
+      <EventReviewsPage />
     </div>
   );
 }

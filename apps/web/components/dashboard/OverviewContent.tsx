@@ -12,9 +12,7 @@ interface Event {
   totalRevenue: number;
   totalBookings: number;
   averageRating: number;
-  registrations?: number; // fallback field
   category: string;
-  rating?: number; // fallback field
 }
 
 interface CategoryData {
@@ -51,18 +49,19 @@ const categoryData: CategoryData[] = useMemo(() => {
     revenue: data.revenue,
   }));
   }, [events]);
+
   const reviewedEvents = events.filter((e) => e.averageRating > 0);
 
   const stats = {
     totalEvents: events.length,
     totalRegistrations: events.reduce(
-      (sum, e) => sum + (e.totalBookings ?? e.registrations ?? 0),
+      (sum, e) => sum + (e.totalBookings ?? 0),
       0
     ),
     totalRevenue: events.reduce((sum, e) => sum + (e.totalRevenue ?? 0), 0),
     avgRating:
       reviewedEvents.length > 0
-        ? reviewedEvents.reduce((sum, e) => sum + (e.averageRating ?? e.rating ?? 0), 0) /
+        ? reviewedEvents.reduce((sum, e) => sum + (e.averageRating ?? 0), 0) /
           reviewedEvents.length
         : 0,
   };
@@ -77,7 +76,7 @@ const categoryData: CategoryData[] = useMemo(() => {
         setEvents(Array.isArray(json.events) ? json.events : []);
       } catch (err) {
         console.error(err);
-        setError("Could not load events.");
+        setError("No Events Created.");
         setEvents([]);
       } finally {
         setLoading(false);
@@ -160,19 +159,19 @@ const categoryData: CategoryData[] = useMemo(() => {
                     key={`cell-${index}`}
                     fill={
                       index === 0
-                        ? "var(--sky)"
+                        ? "pink"
                         : index === 1
-                        ? "var(--mint)"
+                        ? "#ADD8E6"
                         : index === 2
-                        ? "var(--banana)"
-                        : "var(--rose)"
+                        ? "#FFCCCB"
+                        : "#90EE90"
                     }
                   />
                 ))}
               </Pie>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "var(--surface)",
+                  backgroundColor: "white",
                   border: "1px solid var(--line)",
                   borderRadius: "8px",
                 }}

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { subYears, subWeeks, subDays, startOfDay, startOfWeek, startOfYear } from "date-fns";
+import { subYears, subWeeks, subDays, startOfDay, startOfWeek } from "date-fns";
 
 const prisma = new PrismaClient();
 
@@ -49,7 +49,6 @@ export async function getRegistrationTrends(
     } else if (range === "week") {
       const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
       const lastWeekStart = subWeeks(currentWeekStart, 1);
-      const last2WeekStart = subWeeks(currentWeekStart, 2);
 
       if (tx.createdAt >= currentWeekStart) bucket = "Current";
       else if (tx.createdAt >= lastWeekStart) bucket = "Last";
@@ -57,7 +56,6 @@ export async function getRegistrationTrends(
     } else {
       const todayStart = startOfDay(new Date());
       const yesterdayStart = subDays(todayStart, 1);
-      const dayBeforeStart = subDays(todayStart, 2);
 
       if (tx.createdAt >= todayStart) bucket = "Current";
       else if (tx.createdAt >= yesterdayStart) bucket = "Last";

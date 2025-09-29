@@ -1,16 +1,721 @@
-
+[?9001h[?1004h[?25l[2J[m[H]0;npm[?25h]0;npm prefix]0;npm]0;npm run dev[?25l
 > api@1.0.0 dev
-> nodemon src/server.ts
-
-[1G[0K[33m[nodemon] 3.1.10[39m
-[33m[nodemon] to restart at any time, enter `rs`[39m
-[33m[nodemon] watching path(s): src/**/*[39m
-[33m[nodemon] watching extensions: ts[39m
-[32m[nodemon] starting `ts-node src/server.ts src/server.ts`[39m
+> nodemon src/server.ts[5;1H[?25h[K]0;C:\WINDOWS\system32\cmd.exe [33m[nodemon] 3.1.10
+[m[33m[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): src\**\*
+[nodemon] watching extensions: ts[32m
+[nodemon] starting `ts-node src/server.ts src/server.ts`
+[m🚀 Server running on port 5000
+📊 Environment: development
+::1 - - [29/Sep/2025:06:50:59 +0000] "GET /api/events?page=1&limit=6 HTTP/1.1" 200 1512 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:50:59 +0000] "GET /api/reviews HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla
+[13;104Ha/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+[13;104H6"
+::1 - - [29/Sep/2025:06:51:17 +0000] "GET /api/auth/profile HTTP/1.1" 200 218 "http://localhost:3000/" "
+[13;104H"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari
+[13;104Hi/537.36"
+::1 - - [29/Sep/2025:06:51:17 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:51:17 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:51:17 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:51:17 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:51:17 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:51:17 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:51:42 +0000] "GET /api/auth/login HTTP/1.1" 404 29 "-" "PostmanRuntime/7.48.0"
+::1 - - [29/Sep/2025:06:51:58 +0000] "GET /api/auth/login HTTP/1.1" 404 29 "-" "PostmanRuntime/7.48.0"
+::1 - - [29/Sep/2025:06:52:21 +0000] "GET /api/auth/login HTTP/1.1" 404 29 "-" "PostmanRuntime/7.48.0"
+::1 - - [29/Sep/2025:06:52:39 +0000] "POST /api/auth/login HTTP/1.1" 200 463 "-" "PostmanRuntime/7.48.0"[14;1H
+::1 - - [29/Sep/2025:06:53:40 +0000] "GET /api/auth/profile HTTP/1.1" 200 218 "http://localhost:3000/" "
+[13;104H"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari
+[13;104Hi/537.36"
+::1 - - [29/Sep/2025:06:53:40 +0000] "GET /api/stats/events?range=week HTTP/1.1" 200 123 "http://localho
+[13;104Host:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0
+[13;104H0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:40 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:40 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 200 1952 "http://loc
+[13;104Hcalhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/1
+[13;104H140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:40 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:40 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:40 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:43 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:49 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:49 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:49 +0000] "GET /api/attendees/events/cmg0iix230001ewowms3u0lz4 HTTP/1.1" 200 
+[13;104H 168 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like 
+[13;104H Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:06:53:49 +0000] "GET /api/attendees/events/cmg0iix230001ewowms3u0lz4 HTTP/1.1" 304 
+[13;104H - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+[32m[nodemon] restarting due to changes...[m
+[?25l
+[32m[13;1H[nodemon] restarting due to changes...[m
+[?25h[32m[nodemon] starting `ts-node src/server.ts src/server.ts`[m
 🚀 Server running on port 5000
 📊 Environment: development
-::1 - - [26/Sep/2025:07:33:16 +0000] "GET /api/events?page=1&limit=6 HTTP/1.1" 200 115 "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
-::1 - - [26/Sep/2025:07:33:19 +0000] "GET /api/events?category=Business+%26+Professional&page=1&limit=6 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
-::1 - - [26/Sep/2025:07:33:21 +0000] "GET /api/events?category=Music&page=1&limit=6 HTTP/1.1" 200 115 "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
-::1 - - [26/Sep/2025:07:33:22 +0000] "GET /api/events?category=Food+%26+Drink&page=1&limit=6 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
-::1 - - [26/Sep/2025:07:33:23 +0000] "GET /api/events?page=1&limit=6 HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+[32m[nodemon] restarting due to changes...[m
+[?25l
+[13;1H[?25h[32m[nodemon] starting `ts-node src/server.ts src/server.ts`
+[mC:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_Evan_Hilmy\apps\api\node
+[13;104He_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/review.controller.ts[m:[93m34[m:[93m23 [m- [91merror [90mTS7010: [m'getEventReviews', which lacks return-type an
+[13;104Hnnotation, implicitly has an 'any' return type.
+
+[7m34[27m export async function getEventReviews(req: Request, res: Response) => {[K
+[7m  [27m[23X[91m[23C~~~~~~~~~~~~~~~[K[m
+[96msrc/controllers/review.controller.ts[m:[93m36[m:[93m25 [m- [91merror [90mTS2304: [mCannot find name 'req'.[K
+
+[7m36[27m     const { eventId } = req.params;[K
+[7m  [27m[25X[91m[25C~~~[K[m
+[96msrc/controllers/review.controller.ts[m:[93m39[m:[93m14 [m- [91merror [90mTS2304: [mCannot find name 'res'.[K
+
+[7m39[27m       return res.status(400).json({ message: "Event ID is required" });[K
+[7m  [27m[14X[91m[14C~~~[K[m
+[96msrc/controllers/review.controller.ts[m:[93m42[m:[93m27 [m- [91merror [90mTS2304: [mCannot find name 'getReviewsByEventId'.      [14;1H
+
+[7m42[27m     const reviews = await getReviewsByEventId(eventId);[K
+[7m  [27m[27X[91m[27C~~~~~~~~~~~~~~~~~~~[K[m
+[96msrc/controllers/review.controller.ts[m:[93m44[m:[93m5 [m- [91merror [90mTS2304: [mCannot find name 'res'.[K
+
+[7m44[27m     res.json({[K
+[7m  [27m     [91m~~~[K[m
+[96msrc/controllers/review.controller.ts[m:[93m51[m:[93m5 [m- [91merror [90mTS2304: [mCannot find name 'res'.[K
+
+[7m51[27m     res.status(500).json({ message: "Internal server error" });[K
+[7m  [27m     [91m~~~[K[m
+[96msrc/controllers/review.controller.ts[m:[93m34[m:[93m68 [m- [91merror [90mTS1144: [m'{' or ';' expected.[K
+
+[7m34[27m export async function getEventReviews(req: Request, res: Response) => {[K
+[7m  [27m[68X[91m[68C~~[K[m
+
+    at createTSError [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_Ev[m
+[90m[13;104Hvan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:859:12[90m)[K[m
+    at reportTSError [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_Ev[m
+[90m[13;104Hvan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:863:19[90m)[K[m
+    at getOutput [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_Evan_H[m
+[90m[13;104HHilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1077:36[90m)[K[m
+    at Object.compile [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_E[m
+[90m[13;104HEvan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1433:41[90m)[K[m
+    at Module.m._compile [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwa[m
+[90m[13;104Han_Evan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1617:30[90m)[K[m
+[90m    at Module._extensions..js (node:internal/modules/cjs/loader:1310:10)[m
+    at Object.require.extensions.<computed> [as .ts] [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini[m
+[90m[13;104Hi-project\Ticketing_App-Ichwan_Evan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1621:12[90m)[K[m
+[90m    at Module.load (node:internal/modules/cjs/loader:1119:32)[m
+[90m    at Function.Module._load (node:internal/modules/cjs/loader:960:12)[m
+[90m    at Module.require (node:internal/modules/cjs/loader:1143:19) [m{[K
+  diagnosticCodes: [
+    [33m7010[m, [33m2304[m,[K
+    [33m2304[m, [33m2304[m,[K
+    [33m2304[m, [33m2304[m,[K
+    [33m1144[K[m
+  ]
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[m
+[32m[nodemon] restarting due to changes...[m
+[32m[nodemon] starting `ts-node src/server.ts src/server.ts`[m
+🚀 Server running on port 5000
+📊 Environment: development
+[32m[nodemon] restarting due to changes...[m
+[?25l
+[13;1H[?25h[32m[nodemon] starting `ts-node src/server.ts src/server.ts`
+[mC:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_Evan_Hilmy\apps\api\node
+[13;104He_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/review.router.ts[m:[93m9[m:[93m33 [m- [91merror [90mTS2304: [mCannot find name 'getEventReviews'.[K
+
+[7m9[27m router.get("/:eventId/reviews", getEventReviews);[K
+[7m [27m[33X[91m[33C~~~~~~~~~~~~~~~[K[m
+
+    at createTSError [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_Ev[m
+[90m[13;104Hvan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:859:12[90m)[K[m
+    at reportTSError [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_Ev[m
+[90m[13;104Hvan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:863:19[90m)[K[m
+    at getOutput [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_Evan_H[m
+[90m[13;104HHilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1077:36[90m)[K[m
+    at Object.compile [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwan_E[m
+[90m[13;104HEvan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1433:41[90m)[K[m
+    at Module.m._compile [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwa[m
+[90m[13;104Han_Evan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1617:30[90m)[K[m
+[90m    at Module._extensions..js (node:internal/modules/cjs/loader:1310:10)[m
+    at Object.require.extensions.<computed> [as .ts] [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini[m
+[90m[13;104Hi-project\Ticketing_App-Ichwan_Evan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1621:12[90m)[K[m
+[90m    at Module.load (node:internal/modules/cjs/loader:1119:32)[m
+[90m    at Function.Module._load (node:internal/modules/cjs/loader:960:12)[m
+[90m    at Module.require (node:internal/modules/cjs/loader:1143:19) [m{[K
+  diagnosticCodes: [ [33m2304 [m][K
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[m
+[32m[nodemon] restarting due to changes...[m
+[32m[nodemon] starting `ts-node src/server.ts src/server.ts`[m
+🚀 Server running on port 5000
+📊 Environment: development
+::1 - - [29/Sep/2025:07:13:44 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:44 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:44 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:45 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:45 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:45 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:46 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:47 +0000] "GET /api/attendees/events/cmg0iix230001ewowms3u0lz4 HTTP/1.1" 304 
+[13;104H - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:47 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:47 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:47 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:47 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:47 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:47 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:55 +0000] "GET /api/events/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 404 29
+[13;104H9 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:55 +0000] "GET /api/events/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 404 29
+[13;104H9 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:58 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:59 +0000] "GET /api/attendees/events/cmg0iix230001ewowms3u0lz4 HTTP/1.1" 304 
+[13;104H - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:59 +0000] "GET /api/events/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 404 29
+[13;104H9 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:13:59 +0000] "GET /api/events/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 404 29
+[13;104H9 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:16:11 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:16:11 +0000] "GET /api/attendees/events/cmg0iix230001ewowms3u0lz4 HTTP/1.1" 304 
+[13;104H - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:16:11 +0000] "GET /api/events/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 404 29
+[13;104H9 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:16:11 +0000] "GET /api/events/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 404 29
+[13;104H9 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:19 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:19 +0000] "GET /api/attendees/events/cmg0iix230001ewowms3u0lz4 HTTP/1.1" 304 
+[13;104H - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:19 +0000] "GET /api/reviews/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 200 2
+[13;104H265 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like G
+[13;104HGecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:19 +0000] "GET /api/reviews/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 304 -
+[13;104H- "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:42 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mo
+[13;104Hozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/5
+[13;104H537.36"
+::1 - - [29/Sep/2025:07:17:42 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mo
+[13;104Hozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/5
+[13;104H537.36"
+::1 - - [29/Sep/2025:07:17:42 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:42 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:42 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:42 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:42 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:42 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:50 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:50 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:52 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:52 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:52 +0000] "GET /api/attendees/events/cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 200 
+[13;104H 2 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:52 +0000] "GET /api/attendees/events/cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 304 
+[13;104H - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:52 +0000] "GET /api/reviews/cmfzfuct60003hcsb3twx82k3/reviews HTTP/1.1" 200 6
+[13;104H69 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:52 +0000] "GET /api/reviews/cmfzfuct60003hcsb3twx82k3/reviews HTTP/1.1" 304 -
+[13;104H- "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:55 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mo
+[13;104Hozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/5
+[13;104H537.36"
+::1 - - [29/Sep/2025:07:17:55 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mo
+[13;104Hozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/5
+[13;104H537.36"
+::1 - - [29/Sep/2025:07:17:55 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:55 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:55 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:55 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:55 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:55 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:56 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:56 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:57 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:57 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:57 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:57 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:57 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:57 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:57 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:57 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:58 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:58 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:58 +0000] "GET /api/attendees/events/cmfys9fce0001qckyt6b25hmv HTTP/1.1" 200 
+[13;104H 503 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like 
+[13;104H Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:58 +0000] "GET /api/attendees/events/cmfys9fce0001qckyt6b25hmv HTTP/1.1" 304 
+[13;104H - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:58 +0000] "GET /api/reviews/cmfys9fce0001qckyt6b25hmv/reviews HTTP/1.1" 200 2
+[13;104H264 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like G
+[13;104HGecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:17:58 +0000] "GET /api/reviews/cmfys9fce0001qckyt6b25hmv/reviews HTTP/1.1" 304 -
+[13;104H- "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:03 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mo
+[13;104Hozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/5
+[13;104H537.36"
+::1 - - [29/Sep/2025:07:18:03 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mo
+[13;104Hozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/5
+[13;104H537.36"
+::1 - - [29/Sep/2025:07:18:03 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:03 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:03 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:03 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:03 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:03 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:37 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:37 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:38 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:38 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:38 +0000] "GET /api/attendees/events/cmg0iix230001ewowms3u0lz4 HTTP/1.1" 304 
+[13;104H - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:38 +0000] "GET /api/attendees/events/cmg0iix230001ewowms3u0lz4 HTTP/1.1" 304 
+[13;104H - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
+[13;104Hecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:38 +0000] "GET /api/reviews/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 304 -
+[13;104H- "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:18:38 +0000] "GET /api/reviews/cmg0iix230001ewowms3u0lz4/reviews HTTP/1.1" 304 -
+[13;104H- "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gec
+[13;104Hcko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:45 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mo
+[13;104Hozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/5
+[13;104H537.36"
+::1 - - [29/Sep/2025:07:19:45 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mo
+[13;104Hozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/5
+[13;104H537.36"
+::1 - - [29/Sep/2025:07:19:45 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:45 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:45 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:45 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:45 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:45 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:48 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:48 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:49 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:49 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:49 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:49 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:49 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:49 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:49 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:49 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:50 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:50 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:53 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:53 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:53 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:53 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:53 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:53 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:53 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:53 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:59 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:59 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:59 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:59 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:59 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:19:59 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:20:05 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:20:05 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:20:11 +0000] "GET /api/events?page=1&limit=6 HTTP/1.1" 304 - "http://localhost:3
+[13;104H3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0
+[13;104H0 Safari/537.36"
+::1 - - [29/Sep/2025:07:20:11 +0000] "GET /api/reviews HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla
+[13;104Ha/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+[13;104H6"
+::1 - - [29/Sep/2025:07:20:11 +0000] "GET /api/events?page=1&limit=6 HTTP/1.1" 304 - "http://localhost:3
+[13;104H3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0
+[13;104H0 Safari/537.36"
+::1 - - [29/Sep/2025:07:20:11 +0000] "GET /api/reviews HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla
+[13;104Ha/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+[13;104H6"
+::1 - - [29/Sep/2025:07:45:01 +0000] "GET /api/auth/profile HTTP/1.1" 401 47 "http://localhost:3000/" "M
+[13;104HMozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/
+[13;104H/537.36"
+::1 - - [29/Sep/2025:07:45:27 +0000] "GET /api/auth/profile HTTP/1.1" 200 218 "http://localhost:3000/" "
+[13;104H"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari
+[13;104Hi/537.36"
+::1 - - [29/Sep/2025:07:45:27 +0000] "GET /api/stats/events?range=week HTTP/1.1" 200 123 "http://localho
+[13;104Host:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0
+[13;104H0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:27 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 200 115 "http://loca
+[13;104Halhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/14
+[13;104H40.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:27 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:27 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:27 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:27 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:34 +0000] "GET /api/auth/profile HTTP/1.1" 200 218 "http://localhost:3000/" "
+[13;104H"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari
+[13;104Hi/537.36"
+::1 - - [29/Sep/2025:07:45:34 +0000] "GET /api/stats/events?range=week HTTP/1.1" 200 123 "http://localho
+[13;104Host:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0
+[13;104H0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:34 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:34 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 200 1952 "http://loc
+[13;104Hcalhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/1
+[13;104H140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:34 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:34 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:45:34 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:52:00 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:52:00 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:54:28 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:54:28 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:54:28 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:54:28 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:54:28 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:54:28 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:54:59 +0000] "GET /api/stats/events?range=day HTTP/1.1" 304 - "http://localhost:
+[13;104H:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.
+[13;104H.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:55:07 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:56:41 +0000] "GET /api/stats/events?range=day HTTP/1.1" 304 - "http://localhost:
+[13;104H:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.
+[13;104H.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:56:55 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:58:05 +0000] "GET /api/stats/events?range=day HTTP/1.1" 304 - "http://localhost:
+[13;104H:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.
+[13;104H.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:58:49 +0000] "POST /api/transactions HTTP/1.1" 201 500 "-" "PostmanRuntime/7.48.
+[13;104H.0"
+::1 - - [29/Sep/2025:07:58:54 +0000] "GET /api/auth/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mo
+[13;104Hozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/5
+[13;104H537.36"
+::1 - - [29/Sep/2025:07:58:54 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:58:54 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:58:55 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:58:55 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:58:55 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:58:55 +0000] "GET /api/stats/events?range=week HTTP/1.1" 304 - "http://localhost
+[13;104Ht:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0
+[13;104H0.0 Safari/537.36"
+::1 - - [29/Sep/2025:07:58:57 +0000] "GET /api/stats/events?range=day HTTP/1.1" 304 - "http://localhost:
+[13;104H:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.
+[13;104H.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:55 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:55 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:55 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 200 1998 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, 
+[13;104H like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:55 +0000] "GET /api/transactions?eventId=cmg0iix230001ewowms3u0lz4 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:55 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:55 +0000] "GET /api/transactions?eventId=cmfzfuct60003hcsb3twx82k3 HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:55 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:55 +0000] "GET /api/transactions?eventId=cmfys9fce0001qckyt6b25hmv HTTP/1.1" 
+[13;104H 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, lik
+[13;104Hke Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:58 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"
+::1 - - [29/Sep/2025:08:00:58 +0000] "GET /api/events/organizer/my-events HTTP/1.1" 304 - "http://localh
+[13;104Hhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.
+[13;104H.0.0.0 Safari/537.36"

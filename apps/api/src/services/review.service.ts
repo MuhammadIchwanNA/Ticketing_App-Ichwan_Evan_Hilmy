@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
    */
   export async function getUnreviewedEvent(userId: string) {
     const now = new Date();
-    console.log(userId);
 
     const transactions = await prisma.transaction.findMany({
       where: {
@@ -75,3 +74,33 @@ const prisma = new PrismaClient();
     });
   }
 
+/**
+ * Get all reviews for a specific event
+ */
+export async function getReviewsByEventId(eventId: string) {
+  const reviews = await prisma.review.findMany({
+    where: { eventId },
+    orderBy: { createdAt: "desc" }, // newest first
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          profilePicture: true,
+        },
+      },
+    },
+  });
+
+  return reviews.map((r) => ({
+    id: r.id,
+    rating: r.rating,
+    comment: r.comment,
+    createdAt: r.createdAt,
+    user: {
+      id: r.user.id,
+      name: r.user.name,
+      profilePicture: r.user.profilePicture,
+    },
+  }));
+}

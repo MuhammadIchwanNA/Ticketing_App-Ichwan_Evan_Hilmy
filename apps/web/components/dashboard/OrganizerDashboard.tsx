@@ -6,7 +6,7 @@ import { TransactionsContent } from "./TransactionContent";
 
 const OrganizerDashboard = () => {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "events" | "transactions" | "analytics"
+    "overview" | "events" | "transactions" 
   >("overview");
 
   const tabs = [
@@ -28,7 +28,7 @@ const OrganizerDashboard = () => {
 
         {/* Tab Navigation */}
         <div className="mb-8">
-          <div className="border-b hairline">
+          <div>
             <div className="flex space-x-8 overflow-x-auto">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
@@ -39,7 +39,7 @@ const OrganizerDashboard = () => {
                     className={`flex items-center gap-2 pb-3 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                       activeTab === tab.id
                         ? "border-sky text-ink"
-                        : "border-transparent  hover:text-ink hover:border-mint"
+                        : "border-transparent hover:text-ink hover:border-mint"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
