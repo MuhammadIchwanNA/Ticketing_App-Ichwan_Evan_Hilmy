@@ -1,12 +1,21 @@
 // lib/axios.ts
-import axios from "axios";
+import axios, { AxiosRequestHeaders } from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api", 
-  // 👆 fallback in case env variable isn't set
-  withCredentials: true, // optional if you need cookies / auth
+  baseURL: "http://localhost:5000/api",
+  withCredentials: true, // only if backend needs cookies
 });
 
-api.defaults.headers.common["Authorization"] = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWZ4cms1M20wMDAwdDdpemVwMjA4enRzIiwiZW1haWwiOiJvcmdhbml6ZXIxQGdtYWlsLmNvbSIsInJvbGUiOiJPUkdBTklaRVIiLCJpYXQiOjE3NTkxMjg3NTksImV4cCI6MTc1OTczMzU1OX0.m-izmwtG3XSl3vArr4LgqrsCiSUnY2k7kNJSBgTcXUY`;
+// Add a request interceptor
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("authToken"); // 👈 get JWT
+    if (token) {
+      (config.headers as AxiosRequestHeaders).Authorization =`Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export default api;

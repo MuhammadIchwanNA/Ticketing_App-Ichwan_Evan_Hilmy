@@ -3,33 +3,18 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string>("");
   const pathname = usePathname();
   const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    const userData = localStorage.getItem("authUser");
-    if (token && userData) {
-      setIsLoggedIn(true);
-      const user = JSON.parse(userData);
-      setUserRole(user.role || "CUSTOMER");
-      setUserName(user.name || "User");
-    }
-  }, []);
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("authUser");
-    setIsLoggedIn(false);
-    setUserRole(null);
-    setUserName("");
+    logout();
     router.push("/");
+    setIsMenuOpen(false);
   };
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -48,7 +33,7 @@ export default function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           <Link
-            href="/events"
+            href="/"
             className={`text-sm font-medium transition-colors hover:text-[var(--foreground)] ${
               pathname === "/" ? "text-[var(--foreground)]" : "text-muted"
             }`}
@@ -56,9 +41,9 @@ export default function Navbar() {
             Browse Events
           </Link>
 
-          {isLoggedIn ? (
+          {user ? (
             <>
-              {userRole === "ORGANIZER" && (
+              {user.role === "ORGANIZER" && (
                 <>
                   <Link
                     href="/dashboard/events/create"
@@ -94,10 +79,10 @@ export default function Navbar() {
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-sky-tint rounded-full">
                   <div className="w-5 h-5 rounded-full bg-gradient-to-br from-rose-400 to-yellow-400 flex items-center justify-center">
                     <span className="text-xs font-semibold text-white">
-                      {userName.charAt(0).toUpperCase()}
+                      {user.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="text-xs font-medium text-muted">{userName}</span>
+                  <span className="text-xs font-medium text-muted">{user.name}</span>
                 </div>
 
                 <button onClick={handleLogout} className="btn btn-ghost text-sm">
@@ -148,9 +133,9 @@ export default function Navbar() {
               Browse Events
             </Link>
 
-            {isLoggedIn ? (
+            {user ? (
               <>
-                {userRole === "ORGANIZER" && (
+                {user.role === "ORGANIZER" && (
                   <>
                     <Link
                       href="/dashboard/events/create"
@@ -172,11 +157,11 @@ export default function Navbar() {
                 <div className="flex items-center gap-2 py-2">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-br from-rose-400 to-yellow-400 flex items-center justify-center">
                     <span className="text-xs font-semibold text-white">
-                      {userName.charAt(0).toUpperCase()}
+                      {user.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="text-sm font-medium">{userName}</span>
-                  <span className="text-xs text-muted">({userRole?.toLowerCase()})</span>
+                  <span className="text-sm font-medium">{user.name}</span>
+                  <span className="text-xs text-muted">({user.role.toLowerCase()})</span>
                 </div>
 
                 <Link
@@ -188,10 +173,7 @@ export default function Navbar() {
                 </Link>
 
                 <button
-                  onClick={() => {
-                    closeMenu();
-                    handleLogout();
-                  }}
+                  onClick={handleLogout}
                   className="block w-full text-left text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors"
                 >
                   Logout
