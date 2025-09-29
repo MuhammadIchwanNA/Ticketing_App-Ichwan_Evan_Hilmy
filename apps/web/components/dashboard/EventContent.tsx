@@ -12,7 +12,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import api from "../../lib/axios"; // 👈 make sure this points to your axios instance
+import api from "../../lib/axios";
 
 export const EventsContent = () => {
   const router = useRouter();
@@ -46,7 +46,7 @@ export const EventsContent = () => {
         const res = await api.get("/events/organizer/my-events");
         setEvents(res.data.events);
       } catch (err: any) {
-        setError("Failed to load events.");
+        setError("No Events Created.");
       } finally {
         setLoading(false);
       }

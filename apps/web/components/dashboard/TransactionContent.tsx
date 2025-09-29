@@ -109,8 +109,8 @@ export const TransactionsContent = () => {
         <h3 className="text-lg font-semibold mb-4">Recent Transactions</h3>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead>
-              <tr className="border-b hairline text-left">
+            <thead className="divide-y">
+              <tr className="text-left">
                 <th className="pb-3 text-sm font-medium ">Customer</th>
                 <th className="pb-3 text-sm font-medium ">Event</th>
                 <th className="pb-3 text-sm font-medium ">Amount</th>
@@ -119,13 +119,13 @@ export const TransactionsContent = () => {
                 <th className="pb-3 text-sm font-medium ">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y hairline">
+            <tbody className="divide-y">
               {transactions.map((transaction) => (
                 <tr
                   key={transaction.id}
-                  className="hover:bg-mint-tint transition-colors"
+                  className=""
                 >
-                  <td className="py-4">
+                  <td className="p-4">
                     <div>
                       <div className="font-medium">
                         {transaction.customerName}
@@ -133,18 +133,18 @@ export const TransactionsContent = () => {
                       <div className="text-sm ">{transaction.email}</div>
                     </div>
                   </td>
-                  <td className="py-4">
+                  <td className="p-4">
                     <div className="font-medium">{transaction.eventName}</div>
                     <div className="text-sm ">
                       {transaction.ticketCount} tickets
                     </div>
                   </td>
-                  <td className="py-4">
+                  <td className="p-4">
                     <div className="font-medium">
                       IDR {transaction.totalAmount.toLocaleString()}
                     </div>
                   </td>
-                  <td className="py-4">
+                  <td className="p-4">
                     <span
                       className={`chip ${getTransactionStatusColor(
                         transaction.status
@@ -153,16 +153,10 @@ export const TransactionsContent = () => {
                       {transaction.status.replace("_", " ")}
                     </span>
                   </td>
-                  <td className="py-4 text-sm ">
+                  <td className="p-4 text-sm ">
                     {new Date(transaction.createdAt).toLocaleDateString()}
-                    {/* {transaction.expiresAt && (
-                      <div className="text-xs text-rose">
-                        Expires:{" "}
-                        {new Date(transaction.expiresAt).toLocaleString()}
-                      </div>
-                    )} */}
                   </td>
-                  <td className="py-4">
+                  <td className="p-4">
                     <div className="flex gap-1">
                       {transaction.status === "WAITING_CONFIRMATION" && (
                         <>
@@ -170,7 +164,7 @@ export const TransactionsContent = () => {
                             onClick={() =>
                               handleTransactionAction(transaction.id, "approve")
                             }
-                            className="p-2 hover:bg-mint-tint rounded-lg transition-colors"
+                            className="p-2 rounded-lg"
                             title="Approve"
                           >
                             <CheckCircle className="w-4 h-4 text-mint" />
@@ -179,7 +173,7 @@ export const TransactionsContent = () => {
                             onClick={() =>
                               handleTransactionAction(transaction.id, "reject")
                             }
-                            className="p-2 hover:bg-rose-tint rounded-lg transition-colors"
+                            className="p-2 rounded-lg"
                             title="Reject"
                           >
                             <XCircle className="w-4 h-4 text-rose" />
@@ -191,7 +185,7 @@ export const TransactionsContent = () => {
                           onClick={() =>
                             window.open(transaction.paymentProof as string, "_blank")
                           }
-                          className="p-2 hover:bg-sky-tint rounded-lg transition-colors"
+                          className="p-2 rounded-lg"
                           title="View Payment Proof"
                         >
                           <Eye className="w-4 h-4 text-sky" />

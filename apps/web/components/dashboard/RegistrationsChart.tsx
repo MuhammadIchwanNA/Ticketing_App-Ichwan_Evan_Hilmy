@@ -44,7 +44,7 @@ export default function RegistrationTrendsChart() {
   }, [range]);
 
 return (
-    <Card className="shadow-sm rounded-2xl">
+    <Card className="shadow-sm rounded-2xl bg-white">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           Registration Trends
@@ -59,7 +59,7 @@ return (
             <SelectTrigger className="w-[120px] h-8 text-sm">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               <SelectItem value="day">Day</SelectItem>
               <SelectItem value="week">Week</SelectItem>
               <SelectItem value="year">Year</SelectItem>
