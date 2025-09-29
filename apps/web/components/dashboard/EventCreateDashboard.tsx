@@ -1,9 +1,10 @@
-'usec client';
+'use client';
 import React, { useState } from 'react';
 import {
   Calendar, MapPin, Users, Clock, Image as ImageIcon, Tag,
   Plus, X, Save, Eye, Banknote
 } from 'lucide-react';
+import { apiClient } from '../../lib/api';
 
 interface Voucher {
   id: number;
@@ -41,6 +42,16 @@ const formatIDR = (n: number) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
 const EventCreateDashboard: React.FC = () => {
+  // Get today's date in YYYY-MM-DD format for minimum date
+  const today = new Date();
+  // Set minimum to today (but validation will ensure it's in the future)
+  const minDate = today.toISOString().split('T')[0];
+
+  // Set default times to current time + 1 hour and + 3 hours
+  const now = new Date();
+  const defaultStartTime = new Date(now.getTime() + 60 * 60 * 1000); // +1 hour
+  const defaultEndTime = new Date(now.getTime() + 3 * 60 * 60 * 1000); // +3 hours
+  
   const [formData, setFormData] = useState<EventFormData>({
     name: '',
     description: '',
@@ -48,8 +59,8 @@ const EventCreateDashboard: React.FC = () => {
     location: '',
     startDate: '',
     endDate: '',
-    startTime: '',
-    endTime: '',
+    startTime: defaultStartTime.toTimeString().slice(0, 5), // HH:MM format
+    endTime: defaultEndTime.toTimeString().slice(0, 5), // HH:MM format
     totalSeats: '',
     price: '',
     imageUrl: '',
@@ -74,6 +85,19 @@ const EventCreateDashboard: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Real-time validation for date/time inputs
+    if (name === 'startDate' || name === 'startTime') {
+      const updatedData = { ...formData, [name]: value };
+      if (updatedData.startDate && updatedData.startTime) {
+        const startDateTime = new Date(`${updatedData.startDate}T${updatedData.startTime}`);
+        const now = new Date();
+        if (startDateTime <= now) {
+          // Show warning but don't prevent input
+          console.warn('Selected start time is in the past');
+        }
+      }
+    }
   };
 
   const handleVoucherChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -100,26 +124,76 @@ const EventCreateDashboard: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const priceNum = Number(formData.price) || 0;
-      const totalSeatsNum = Number(formData.totalSeats) || 0;
-
-      const eventData = {
-        ...formData,
-        price: priceNum,
-        totalSeats: totalSeatsNum,
-        startDate: `${formData.startDate}T${formData.startTime}`,
-        endDate: `${formData.endDate}T${formData.endTime}`
-      };
-
-      console.log('Creating event:', eventData);
-      console.log('With vouchers:', vouchers);
-
-      alert('Event created successfully!');
-    } catch (error: unknown) {
-      alert('Error creating event: ' + (error as Error).message);
+  try {
+    // Validate required fields
+    if (!formData.name || !formData.description || !formData.category || 
+        !formData.location || !formData.startDate || !formData.endDate ||
+        !formData.startTime || !formData.endTime || !formData.totalSeats || 
+        formData.price === '') {
+      alert('Please fill in all required fields');
+      return;
     }
-  };
+
+    // Validate dates are in the future (using local timezone)
+    const startDateTime = new Date(`${formData.startDate}T${formData.startTime}`);
+    const endDateTime = new Date(`${formData.endDate}T${formData.endTime}`);
+    const now = new Date();
+
+    // Add a small buffer (1 minute) to account for processing time
+    const minimumStartTime = new Date(now.getTime() + 60000); // 1 minute from now
+
+    if (startDateTime <= minimumStartTime) {
+      const currentTime = now.toLocaleString('id-ID', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+      alert(`Event start time must be in the future.\n\nCurrent time: ${currentTime}\nSelected time: ${startDateTime.toLocaleString('id-ID', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      })}\n\nPlease select a future date and time.`);
+      return;
+    }
+
+    if (endDateTime <= startDateTime) {
+      alert('Event end time must be after start time');
+      return;
+    }
+
+    const priceNum = Number(formData.price) || 0;
+    const totalSeatsNum = Number(formData.totalSeats) || 0;
+
+    const eventData = {
+      name: formData.name,
+      description: formData.description,
+      category: formData.category,
+      location: formData.location,
+      price: priceNum,
+      totalSeats: totalSeatsNum,
+      startDate: startDateTime.toISOString(),
+      endDate: endDateTime.toISOString(),
+      imageUrl: formData.imageUrl || undefined
+    };
+
+    const response = await apiClient.post('/api/events', eventData);
+    
+    alert('Event created successfully!');
+    
+    // Redirect to dashboard after 1 second
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    }, 1000);
+
+  } catch (error: any) {
+    console.error('Error creating event:', error);
+    alert('Error creating event: ' + error.message);
+  }
+};
 
   const togglePreview = () => {
     setFormData(prev => ({ ...prev, isPreview: !prev.isPreview }));
@@ -235,9 +309,13 @@ const EventCreateDashboard: React.FC = () => {
                     type="date"
                     name="startDate"
                     value={formData.startDate}
+                    min={minDate}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-[var(--line)] rounded-lg focus:ring-2 focus:ring-[var(--sky)] focus:border-[var(--sky)] transition-all"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Select today or future date. Time validation will ensure it's in the future.
+                  </p>
                 </div>
 
                 <div>
@@ -260,9 +338,11 @@ const EventCreateDashboard: React.FC = () => {
                     type="date"
                     name="endDate"
                     value={formData.endDate}
+                    min={formData.startDate || minDate}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-[var(--line)] rounded-lg focus:ring-2 focus:ring-[var(--sky)] focus:border-[var(--sky)] transition-all"
                   />
+                  <p className="text-xs text-gray-500 mt-1">End date must be same or after start date</p>
                 </div>
 
                 <div>

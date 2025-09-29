@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -13,7 +13,7 @@ model User {
   password        String
   name            String
   profilePicture  String?
-  role            Role     @default(CUSTOMER)
+  role              String            @default("USER")
   referralCode    String   @unique
   referredBy      String?
   pointsBalance   Int      @default(0)
@@ -62,7 +62,7 @@ model Transaction {
   ticketCount   Int
   totalAmount   Int               // in IDR
   pointsUsed    Int               @default(0)
-  status        TransactionStatus @default(WAITING_PAYMENT)
+  status            String            @default("PENDING")
   paymentProof  String?
   expiresAt     DateTime?
   createdAt     DateTime          @default(now())
@@ -98,7 +98,7 @@ model Voucher {
   eventId     String
   code        String   @unique
   discount    Int      // percentage or fixed amount
-  discountType DiscountType @default(PERCENTAGE)
+  discountType String @default("PERCENTAGE")
   maxUses     Int
   currentUses Int      @default(0)
   startDate   DateTime
@@ -117,7 +117,7 @@ model Coupon {
   userId      String
   code        String   @unique
   discount    Int      // percentage or fixed amount
-  discountType DiscountType @default(PERCENTAGE)
+  discountType String @default("PERCENTAGE")
   isUsed      Boolean  @default(false)
   expiresAt   DateTime
   createdAt   DateTime @default(now())
@@ -133,7 +133,7 @@ model PointsHistory {
   id          String      @id @default(cuid())
   userId      String
   points      Int
-  type        PointsType
+  type        String
   description String
   expiresAt   DateTime?
   createdAt   DateTime    @default(now())
@@ -166,27 +166,3 @@ model TransactionCoupon {
   @@map("transaction_coupons")
 }
 
-enum Role {
-  CUSTOMER
-  ORGANIZER
-}
-
-enum TransactionStatus {
-  WAITING_PAYMENT
-  WAITING_CONFIRMATION
-  CONFIRMED
-  REJECTED
-  EXPIRED
-  CANCELED
-}
-
-enum DiscountType {
-  PERCENTAGE
-  FIXED
-}
-
-enum PointsType {
-  EARNED
-  USED
-  EXPIRED
-}

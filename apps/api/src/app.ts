@@ -1,10 +1,14 @@
-import express, { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import rateLimit from 'express-rate-limit';
-import authRoutes from './routes/authRoutes';
-import eventRoutes from './routes/eventRoutes';
+import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import rateLimit from "express-rate-limit";
+import authRoutes from "./routes/authRoutes";
+import eventRoutes from "./routes/eventRoutes";
+import transactionRoutes from "./routes/transactionRoutesNew";
+import reviewRoutes from "./routes/reviewRoutes";
+// import statsRoutes from "./routes/stats.router";  // Commented out - stats feature temporarily disabled
+// import attendeesRoutes from "./routes/attendees.router";  // Temporarily disabled for debugging
 
 const app = express();
 
@@ -12,48 +16,68 @@ const app = express();
 app.use(helmet());
 
 // Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use(limiter);
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100, // limit each IP to 100 requests per windowMs
+// });
+// app.use(limiter);
 
 // CORS
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      process.env.FRONTEND_URL || "http://localhost:3000",
+      "http://localhost:3001"
+    ],
+    credentials: true,
+  })
+);
 
 // Logging
-app.use(morgan('combined'));
+app.use(morgan("combined"));
 
 // Body parsing
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // Health check
-app.get('/health', (req: Request, res: Response) => {
-  res.json({ status: 'OK', message: 'Server is running!' });
+app.get("/health", (req: Request, res: Response) => {
+  res.json({ status: "OK", message: "Server is running!" });
 });
 
-// Routes 
-app.use('/api/auth', authRoutes);
+// Routes
+app.use("/api/auth", authRoutes);
 
 // Event routes
-app.use('/api/events', eventRoutes);
+app.use("/api/events", eventRoutes);
+
+// Transaction routes
+app.use("/api/transactions", transactionRoutes);
+
+// Review routes
+app.use("/api/reviews", reviewRoutes);
+
+// Stats routes  
+// app.use("/api/stats", statsRoutes);  // Commented out - stats feature temporarily disabled
+
+// Attendees routes - temporarily disabled for debugging
+// app.use("/api/attendees", attendeesRoutes);
+
+// Review routes - temporarily disabled for debugging
+// app.use("/api/reviews", reviewRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
-  res.status(500).json({ 
-    message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'development' ? err.message : {}
+  res.status(500).json({
+    message: "Something went wrong!",
+    error: process.env.NODE_ENV === "development" ? err.message : {},
   });
 });
 
 // 404 handler
-app.use('*', (req: Request, res: Response) => {
-  res.status(404).json({ message: 'Route not found' });
+app.use("*", (req: Request, res: Response) => {
+  res.status(404).json({ message: "Route not found" });
 });
 
 export default app;
