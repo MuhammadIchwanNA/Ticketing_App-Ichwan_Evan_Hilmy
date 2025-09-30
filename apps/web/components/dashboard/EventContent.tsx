@@ -22,7 +22,7 @@ export const EventsContent = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
-    null
+    null,
   );
 
   const [formData, setFormData] = useState({
@@ -59,17 +59,18 @@ export const EventsContent = () => {
     setFormData(event); // prefill form
     setShowEditModal(event.id); // open modal for this event
   };
-const handleDeleteEvent = async (eventId: string) => {
-  try {
-    await api.delete(`/events/${eventId}`);
-    // Remove deleted event from state
-    setEvents((prev) => prev.filter((ev) => ev.id !== eventId));
-  } catch (err) {
-    console.error("Failed to delete event:", err);
-  } finally {
-    setShowDeleteConfirm(null);
-  }
-};
+
+  const handleDeleteEvent = async (eventId: string) => {
+    try {
+      await api.delete(`/events/${eventId}`);
+      // Remove deleted event from state
+      setEvents((prev) => prev.filter((ev) => ev.id !== eventId));
+    } catch (err) {
+      console.error("Failed to delete event:", err);
+    } finally {
+      setShowDeleteConfirm(null);
+    }
+  };
 
   if (loading) {
     return (

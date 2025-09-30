@@ -12,7 +12,7 @@ export async function getRegistrationTrends(req: Request, res: Response) {
 
     const stats = await statsService.getRegistrationTrends(
       organizerId as string,
-      range
+      range,
     );
 
     res.json(stats);

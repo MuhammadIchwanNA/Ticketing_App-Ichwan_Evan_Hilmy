@@ -27,27 +27,27 @@ export const OverviewContent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-const categoryData: CategoryData[] = useMemo(() => {
-  if (!events.length) return [];
+  const categoryData: CategoryData[] = useMemo(() => {
+    if (!events.length) return [];
 
-  // Group events by category
-  const totals: Record<string, { count: number; revenue: number }> = {};
+    // Group events by category
+    const totals: Record<string, { count: number; revenue: number }> = {};
 
-  events.forEach((e) => {
-    if (!totals[e.category]) {
-      totals[e.category] = { count: 0, revenue: 0 };
-    }
-    totals[e.category].count += 1;
-    totals[e.category].revenue += e.totalRevenue ?? 0;
-  });
+    events.forEach((e) => {
+      if (!totals[e.category]) {
+        totals[e.category] = { count: 0, revenue: 0 };
+      }
+      totals[e.category].count += 1;
+      totals[e.category].revenue += e.totalRevenue ?? 0;
+    });
 
-  const totalCount = events.length;
+    const totalCount = events.length;
 
-  return Object.entries(totals).map(([name, data]) => ({
-    name,
-    value: Math.round((data.count / totalCount) * 100), // percentage
-    revenue: data.revenue,
-  }));
+    return Object.entries(totals).map(([name, data]) => ({
+      name,
+      value: Math.round((data.count / totalCount) * 100), // percentage
+      revenue: data.revenue,
+    }));
   }, [events]);
 
   const reviewedEvents = events.filter((e) => e.averageRating > 0);
@@ -56,7 +56,7 @@ const categoryData: CategoryData[] = useMemo(() => {
     totalEvents: events.length,
     totalRegistrations: events.reduce(
       (sum, e) => sum + (e.totalBookings ?? 0),
-      0
+      0,
     ),
     totalRevenue: events.reduce((sum, e) => sum + (e.totalRevenue ?? 0), 0),
     avgRating:
@@ -161,10 +161,10 @@ const categoryData: CategoryData[] = useMemo(() => {
                       index === 0
                         ? "pink"
                         : index === 1
-                        ? "#ADD8E6"
-                        : index === 2
-                        ? "#FFCCCB"
-                        : "#90EE90"
+                          ? "#ADD8E6"
+                          : index === 2
+                            ? "#FFCCCB"
+                            : "#90EE90"
                     }
                   />
                 ))}
@@ -223,8 +223,8 @@ const categoryData: CategoryData[] = useMemo(() => {
               <div className="flex items-center gap-3">
                 <div className="text-right">
                   <div className="text-sm font-medium">
-                    {Math.round((event.totalBookings / event.totalSeats) * 100)}%
-                    filled
+                    {Math.round((event.totalBookings / event.totalSeats) * 100)}
+                    % filled
                   </div>
                   <div className="w-24 h-2 bg-line rounded-full overflow-hidden">
                     <div

@@ -8,7 +8,7 @@ import eventRoutes from "./routes/eventRoutes";
 import transactionRoutes from "./routes/transaction.router";
 import statsRoutes from "./routes/stats.router";
 import attendeesRoutes from "./routes/attendees.router";
-import reviewRoutes from "./routes/review.router"
+import reviewRoutes from "./routes/review.router";
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
-  })
+  }),
 );
 
 // Logging

@@ -16,7 +16,11 @@ export const metadata: Metadata = {
   description: "Discover and book the best events in your city or online.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className={`${plusJakarta.variable} antialiased font-sans`}>

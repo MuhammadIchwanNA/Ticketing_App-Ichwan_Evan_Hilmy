@@ -27,7 +27,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'CUSTOMER' | 'ORGANIZER';
+  role: "CUSTOMER" | "ORGANIZER";
   referralCode: string;
   pointsBalance: number;
   profilePicture?: string;

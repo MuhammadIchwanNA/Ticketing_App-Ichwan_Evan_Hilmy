@@ -1,4 +1,4 @@
-import EnhancedAuthPage from '@/components/auth/EnhancedAuthPage';
+import EnhancedAuthPage from "@/components/auth/EnhancedAuthPage";
 
 export default function AuthPage() {
   return <EnhancedAuthPage />;

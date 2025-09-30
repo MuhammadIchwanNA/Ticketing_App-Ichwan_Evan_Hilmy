@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import {
   Select,
   SelectContent,
@@ -43,7 +51,7 @@ export default function RegistrationTrendsChart() {
     fetchData();
   }, [range]);
 
-return (
+  return (
     <Card className="shadow-sm rounded-2xl bg-white">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
@@ -82,16 +90,16 @@ return (
                 data={data}
                 margin={{ top: 20, right: 10, left: 10, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="hsl(var(--muted))"
+                />
                 <XAxis
                   dataKey="date"
                   stroke="hsl(var(--muted-foreground))"
                   fontSize={12}
                 />
-                <YAxis
-                  stroke="hsl(var(--muted-foreground))"
-                  fontSize={12}
-                />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "white", // solid background

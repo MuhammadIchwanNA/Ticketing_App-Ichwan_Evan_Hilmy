@@ -1,6 +1,7 @@
 {
   "name": "ticketing-app",
-  "private": true,  "scripts": {
+  "private": true,
+  "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
