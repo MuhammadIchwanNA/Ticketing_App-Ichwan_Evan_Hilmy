@@ -100,7 +100,7 @@ export const PendingApprovalsContent: React.FC = () => {
 
     try {
       const actionData = { action: action === "approve" ? "confirm" : "reject" };
-      await apiClient.patch(`/api/transactions/${transactionId}/confirm`, actionData);
+      await apiClient.put(`/api/transactions/${transactionId}/confirm`, actionData);
       
       // Remove from pending list after action
       setPendingTransactions((prev) =>

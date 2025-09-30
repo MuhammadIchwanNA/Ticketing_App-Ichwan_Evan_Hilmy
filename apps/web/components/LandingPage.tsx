@@ -574,6 +574,7 @@ const LoadingGrid = () => (
 );
 
 export default function LandingPage() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     category: "",

@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { apiClient } from "../../lib/api";
+import api from "@/lib/axios";
 
 export const EventsContent = () => {
   const router = useRouter();

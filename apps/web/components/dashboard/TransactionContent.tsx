@@ -90,7 +90,7 @@ export const TransactionsContent = () => {
   ) => {
     try {
       const actionData = { action: action === "approve" ? "confirm" : "reject" };
-      await apiClient.patch(`/api/transactions/${transactionId}/confirm`, actionData);
+      await apiClient.put(`/api/transactions/${transactionId}/confirm`, actionData);
       // Refresh after action
       setTransactions((prev) =>
         prev.map((t) =>
