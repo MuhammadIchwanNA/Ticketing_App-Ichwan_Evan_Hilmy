@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Search, Filter, X, MapPin, Calendar, DollarSign } from "lucide-react";
 
 // Types
 interface Event {
@@ -49,13 +51,19 @@ function useDebounce(value: string, delay: number) {
   return debouncedValue;
 }
 
-function useEvents(filters: {
-  search?: string;
-  category?: string;
-  location?: string;
-  page?: number;
-  limit?: number;
-} = {}) {
+function useEvents(
+  filters: {
+    search?: string;
+    category?: string;
+    location?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    dateStart?: string;
+    dateEnd?: string;
+    page?: number;
+    limit?: number;
+  } = {},
+) {
   const [events, setEvents] = useState<Event[]>([]);
   const [pagination, setPagination] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -64,23 +72,23 @@ function useEvents(filters: {
   const fetchEvents = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const queryParams = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
+        if (value !== undefined && value !== null && value !== "") {
           queryParams.append(key, value.toString());
         }
       });
-      
+
       const queryString = queryParams.toString();
-      const url = `http://localhost:5000/api/events${queryString ? `?${queryString}` : ''}`;
-      
+      const url = `http://localhost:5000/api/events${queryString ? `?${queryString}` : ""}`;
+
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Failed to fetch events');
+        throw new Error("Failed to fetch events");
       }
-      
+
       const data: EventsResponse = await response.json();
       setEvents(data.events);
       setPagination(data.pagination);
@@ -93,133 +101,380 @@ function useEvents(filters: {
 
   useEffect(() => {
     fetchEvents();
-  }, [filters.search, filters.category, filters.location, filters.page]);
+  }, [
+    filters.search,
+    filters.category,
+    filters.location,
+    filters.minPrice,
+    filters.maxPrice,
+    filters.dateStart,
+    filters.dateEnd,
+    filters.page,
+  ]);
 
   return { events, pagination, loading, error, refetch: fetchEvents };
 }
 
 // Components
-const SearchStrip = ({ 
-  searchTerm, 
-  setSearchTerm, 
-  selectedCategory, 
-  setSelectedCategory, 
-  locationFilter, 
-  setLocationFilter,
-  onSearch 
+const EnhancedSearchStrip = ({
+  searchTerm,
+  setSearchTerm,
+  filters,
+  setFilters,
+  isSearching,
+  onClearFilters,
+  hasActiveFilters,
 }: {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-  locationFilter: string;
-  setLocationFilter: (location: string) => void;
-  onSearch: () => void;
+  filters: any;
+  setFilters: (filters: any) => void;
+  isSearching: boolean;
+  onClearFilters: () => void;
+  hasActiveFilters: boolean;
 }) => {
-  const cities = ["Jakarta", "Bandung", "Surabaya", "Yogyakarta", "Bali", "Medan"];
-  const categories = ["All Categories", "Business & Professional", "Music", "Food & Drink", "Arts & Culture", "Technology", "Sports & Fitness", "Health & Wellness", "Education"];
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
+  const cities = [
+    "Jakarta",
+    "Bandung",
+    "Surabaya",
+    "Yogyakarta",
+    "Bali",
+    "Medan",
+    "Semarang",
+    "Palembang",
+  ];
+  const categories = [
+    "All Categories",
+    "Business & Professional",
+    "Music",
+    "Food & Drink",
+    "Arts & Culture",
+    "Technology",
+    "Sports & Fitness",
+    "Health & Wellness",
+    "Education",
+  ];
+
+  const updateFilter = (key: string, value: any) => {
+    setFilters((prev: any) => ({ ...prev, [key]: value }));
+  };
 
   return (
-    <div className="mt-4 grid grid-cols-1 md:grid-cols-5 border hairline rounded-xl overflow-hidden bg-white">
-      <div className="booking-field">
-        <span className="booking-label">What</span>
-        <input
-          type="text"
-          placeholder="Search events..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="booking-value bg-transparent border-none outline-none w-full"
-        />
+    <div className="space-y-4">
+      {/* Main Search Bar */}
+      <div className="grid grid-cols-1 md:grid-cols-5 border hairline rounded-xl overflow-hidden bg-white shadow-sm">
+        {/* Search Input */}
+        <div className="booking-field relative">
+          <span className="booking-label">What</span>
+          <div className="relative">
+            <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+            <input
+              type="text"
+              placeholder="Search events..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="booking-value bg-transparent border-none outline-none w-full pl-6"
+            />
+            {isSearching && (
+              <div className="absolute right-0 top-1/2 -translate-y-1/2">
+                <div className="w-4 h-4 border-2 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="booking-field border-t md:border-t-0 md:border-l hairline">
+          <span className="booking-label">Where</span>
+          <div className="relative">
+            <MapPin className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+            <select
+              value={filters.location}
+              onChange={(e) => updateFilter("location", e.target.value)}
+              className="booking-value bg-transparent border-none outline-none w-full pl-6 appearance-none"
+            >
+              <option value="">All Cities</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Category */}
+        <div className="booking-field border-t md:border-t-0 md:border-l hairline">
+          <span className="booking-label">Category</span>
+          <select
+            value={filters.category}
+            onChange={(e) =>
+              updateFilter(
+                "category",
+                e.target.value === "All Categories" ? "" : e.target.value,
+              )
+            }
+            className="booking-value bg-transparent border-none outline-none w-full appearance-none"
+          >
+            {categories.map((category) => (
+              <option
+                key={category}
+                value={category === "All Categories" ? "" : category}
+              >
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Date Range */}
+        <div className="booking-field border-t md:border-t-0 md:border-l hairline">
+          <span className="booking-label">When</span>
+          <div className="relative">
+            <Calendar className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+            <input
+              type="date"
+              value={filters.dateStart}
+              onChange={(e) => updateFilter("dateStart", e.target.value)}
+              className="booking-value bg-transparent border-none outline-none w-full pl-6"
+            />
+          </div>
+        </div>
+
+        {/* Search Button */}
+        <div className="md:border-l hairline p-2 flex gap-2">
+          <button
+            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+            className={`p-2 rounded-lg border transition-colors ${showAdvancedFilters ? "bg-sky-500 text-white border-sky-500" : "bg-white text-gray-700 border-gray-200"}`}
+            title="Advanced Filters"
+          >
+            <Filter className="w-4 h-4" />
+          </button>
+
+          {hasActiveFilters && (
+            <button
+              onClick={onClearFilters}
+              className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+              title="Clear Filters"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
-      
-      <div className="booking-field border-t md:border-t-0 md:border-l hairline">
-        <span className="booking-label">Where</span>
-        <select
-          value={locationFilter}
-          onChange={(e) => setLocationFilter(e.target.value)}
-          className="booking-value bg-transparent border-none outline-none w-full"
-        >
-          {cities.map(city => (
-            <option key={city} value={city}>{city}</option>
-          ))}
-        </select>
-      </div>
-      
-      <div className="booking-field border-t md:border-t-0 md:border-l hairline">
-        <span className="booking-label">Category</span>
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="booking-value bg-transparent border-none outline-none w-full"
-        >
-          {categories.map(category => (
-            <option key={category} value={category === 'All Categories' ? '' : category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
-      
-      <div className="booking-field border-t md:border-t-0 md:border-l hairline">
-        <span className="booking-label">When</span>
-        <span className="booking-value">Any date</span>
-      </div>
-      
-      <div className="md:border-l hairline p-2 flex">
-        <button onClick={onSearch} className="btn btn-primary w-full">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="7" />
-            <path d="M20 20l-3.5-3.5" />
-          </svg>
-          Find Events
-        </button>
-      </div>
+
+      {/* Advanced Filters */}
+      {showAdvancedFilters && (
+        <div className="card p-4 bg-mint-tint border-mint-500/20">
+          <h3 className="font-medium mb-3 flex items-center gap-2">
+            <Filter className="w-4 h-4" />
+            Advanced Filters
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Price Range */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Price Range (IDR)
+              </label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    value={filters.minPrice}
+                    onChange={(e) => updateFilter("minPrice", e.target.value)}
+                    className="w-full pl-8 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                  />
+                </div>
+                <span className="text-gray-400 py-2">-</span>
+                <div className="relative flex-1">
+                  <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    value={filters.maxPrice}
+                    onChange={(e) => updateFilter("maxPrice", e.target.value)}
+                    className="w-full pl-8 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Date Range End */}
+            <div>
+              <label className="block text-sm font-medium mb-2">End Date</label>
+              <div className="relative">
+                <Calendar className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                <input
+                  type="date"
+                  value={filters.dateEnd}
+                  onChange={(e) => updateFilter("dateEnd", e.target.value)}
+                  className="w-full pl-8 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                />
+              </div>
+            </div>
+
+            {/* Quick Filters */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Quick Filters
+              </label>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    onChange={(e) =>
+                      updateFilter("minPrice", e.target.checked ? "0" : "")
+                    }
+                    className="rounded border-gray-300 text-sky-500 focus:ring-sky-500"
+                  />
+                  Free Events Only
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    onChange={(e) => {
+                      const today = new Date().toISOString().split("T")[0];
+                      const nextWeek = new Date(
+                        Date.now() + 7 * 24 * 60 * 60 * 1000,
+                      )
+                        .toISOString()
+                        .split("T")[0];
+                      if (e.target.checked) {
+                        updateFilter("dateStart", today);
+                        updateFilter("dateEnd", nextWeek);
+                      } else {
+                        updateFilter("dateStart", "");
+                        updateFilter("dateEnd", "");
+                      }
+                    }}
+                    className="rounded border-gray-300 text-sky-500 focus:ring-sky-500"
+                  />
+                  This Week
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Active Filters Display */}
+      {hasActiveFilters && (
+        <div className="flex flex-wrap gap-2">
+          {searchTerm && (
+            <span className="inline-flex items-center gap-1 px-3 py-1 bg-sky-100 text-sky-800 rounded-full text-sm">
+              Search: "{searchTerm}"
+              <button onClick={() => setSearchTerm("")}>
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+
+          {filters.category && (
+            <span className="inline-flex items-center gap-1 px-3 py-1 bg-mint-100 text-mint-800 rounded-full text-sm">
+              {filters.category}
+              <button onClick={() => updateFilter("category", "")}>
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+
+          {filters.location && (
+            <span className="inline-flex items-center gap-1 px-3 py-1 bg-rose-100 text-rose-800 rounded-full text-sm">
+              {filters.location}
+              <button onClick={() => updateFilter("location", "")}>
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+
+          {(filters.minPrice || filters.maxPrice) && (
+            <span className="inline-flex items-center gap-1 px-3 py-1 bg-banana-100 text-yellow-800 rounded-full text-sm">
+              Price: {filters.minPrice || "0"} - {filters.maxPrice || "∞"}
+              <button
+                onClick={() => {
+                  updateFilter("minPrice", "");
+                  updateFilter("maxPrice", "");
+                }}
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
 const EventCard = ({ event }: { event: Event }) => {
+  const router = useRouter();
+
   const formatPrice = (price: number) => {
-    if (price === 0) return 'Free';
+    if (price === 0) return "Free";
     return `IDR ${(price / 1000).toFixed(0)}K`;
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short', 
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const formatLocation = (location: string) => {
-    const parts = location.split(',');
+    const parts = location.split(",");
     return parts[0].trim();
   };
 
   // Dynamic chip color based on availability
   const getAvailabilityChip = (available: number, total: number) => {
     const ratio = available / total;
-    if (ratio > 0.5) return 'status-available';
-    if (ratio > 0.2) return 'status-limited';
-    return 'status-sold-out';
+    if (ratio > 0.5) return "status-available";
+    if (ratio > 0.2) return "status-limited";
+    return "status-sold-out";
   };
 
   // Cycle through tint backgrounds
   const getTintClass = (id: string) => {
-    const tints = ['bg-rose-tint', 'bg-banana-tint', 'bg-mint-tint', 'bg-sky-tint'];
-    const hash = id.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+    const tints = [
+      "bg-rose-tint",
+      "bg-banana-tint",
+      "bg-mint-tint",
+      "bg-sky-tint",
+    ];
+    const hash = id.split("").reduce((a, b) => a + b.charCodeAt(0), 0);
     return tints[hash % 4];
   };
 
+  const handleCardClick = () => {
+    router.push(`/events/${event.id}`);
+  };
+
   return (
-    <div className="card overflow-hidden hover-lift group">
+    <div
+      className="card overflow-hidden hover-lift group cursor-pointer"
+      onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleCardClick();
+        }
+      }}
+    >
       <div className="relative aspect-[5/3]">
         {event.imageUrl ? (
-          <img 
-            src={event.imageUrl} 
-            alt={event.name} 
+          <img
+            src={event.imageUrl}
+            alt={event.name}
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
@@ -237,11 +492,17 @@ const EventCard = ({ event }: { event: Event }) => {
             <div className="font-semibold">{formatPrice(event.price)}</div>
           </div>
         </div>
-        <div className="text-muted text-sm mb-1">{formatDate(event.startDate)}</div>
-        <div className="text-muted text-sm mb-3">{formatLocation(event.location)}</div>
+        <div className="text-muted text-sm mb-1">
+          {formatDate(event.startDate)}
+        </div>
+        <div className="text-muted text-sm mb-3">
+          {formatLocation(event.location)}
+        </div>
         <div className="flex items-center justify-between">
           <span className="chip">{event.category}</span>
-          <span className={`text-xs px-2 py-1 rounded-full ${getAvailabilityChip(event.availableSeats, event.totalSeats)}`}>
+          <span
+            className={`text-xs px-2 py-1 rounded-full ${getAvailabilityChip(event.availableSeats, event.totalSeats)}`}
+          >
             {event.availableSeats} left
           </span>
         </div>
@@ -250,22 +511,22 @@ const EventCard = ({ event }: { event: Event }) => {
   );
 };
 
-const CategoryList = ({ 
-  categories, 
-  selectedCategory, 
-  onCategorySelect 
+const CategoryList = ({
+  categories,
+  selectedCategory,
+  onCategorySelect,
 }: {
   categories: string[];
   selectedCategory: string;
   onCategorySelect: (category: string) => void;
 }) => (
-  <ul className="divide-y hairline text-[1.05rem]">
+  <ul className="space-y-3 text-[1.05rem]">
     {categories.map((category) => (
       <li key={category} className="flex items-center justify-between py-4">
         <button
           onClick={() => onCategorySelect(category)}
           className={`hover:text-[var(--text)] transition-colors ${
-            selectedCategory === category ? 'font-semibold' : ''
+            selectedCategory === category ? "font-semibold" : ""
           }`}
         >
           {category}
@@ -292,39 +553,73 @@ const LoadingGrid = () => (
   </div>
 );
 
-export default function EnjoyorNewDesign() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [locationFilter, setLocationFilter] = useState('Jakarta');
+export default function LandingPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({
+    category: "",
+    location: "",
+    minPrice: "",
+    maxPrice: "",
+    dateStart: "",
+    dateEnd: "",
+  });
   const [currentPage, setCurrentPage] = useState(1);
-  
-  const debouncedSearch = useDebounce(searchTerm, 500);
-  
+
+  const debouncedSearch = useDebounce(searchTerm, 300);
+
   // Use real API data
   const { events, pagination, loading, error } = useEvents({
     search: debouncedSearch,
-    category: selectedCategory,
-    location: locationFilter === 'Jakarta' ? '' : locationFilter,
+    category: filters.category,
+    location: filters.location === "" ? "" : filters.location,
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice,
+    dateStart: filters.dateStart,
+    dateEnd: filters.dateEnd,
     page: currentPage,
-    limit: 6
+    limit: 6,
   });
 
-  const categories = ["Business & Professional", "Music", "Food & Drink", "Arts & Culture", "Technology", "Sports & Fitness"];
-
-  const handleSearch = () => {
-    setCurrentPage(1);
-  };
+  const categories = [
+    "Business & Professional",
+    "Music",
+    "Food & Drink",
+    "Arts & Culture",
+    "Technology",
+    "Sports & Fitness",
+  ];
 
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(selectedCategory === category ? '' : category);
+    setFilters((prev) => ({
+      ...prev,
+      category: prev.category === category ? "" : category,
+    }));
     setCurrentPage(1);
   };
 
   const clearFilters = () => {
-    setSearchTerm('');
-    setSelectedCategory('');
-    setLocationFilter('Jakarta');
+    setSearchTerm("");
+    setFilters({
+      category: "",
+      location: "",
+      minPrice: "",
+      maxPrice: "",
+      dateStart: "",
+      dateEnd: "",
+    });
     setCurrentPage(1);
+  };
+
+  const hasActiveFilters = () => {
+    return (
+      debouncedSearch.length > 0 ||
+      filters.category !== "" ||
+      filters.location !== "" ||
+      filters.minPrice !== "" ||
+      filters.maxPrice !== "" ||
+      filters.dateStart !== "" ||
+      filters.dateEnd !== ""
+    );
   };
 
   return (
@@ -332,14 +627,14 @@ export default function EnjoyorNewDesign() {
       {/* Search strip */}
       <section className="bg-cream border-b hairline">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <SearchStrip
+          <EnhancedSearchStrip
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            locationFilter={locationFilter}
-            setLocationFilter={setLocationFilter}
-            onSearch={handleSearch}
+            filters={filters}
+            setFilters={setFilters}
+            isSearching={loading}
+            onClearFilters={clearFilters}
+            hasActiveFilters={hasActiveFilters()}
           />
         </div>
       </section>
@@ -349,10 +644,12 @@ export default function EnjoyorNewDesign() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid">
             <h1 className="hero-title">
-              Discover Events.<br /> Easy Booking.
+              Discover Events.
+              <br /> Easy Booking.
             </h1>
             <p className="text-muted mt-4 text-lg max-w-2xl">
-              Find and book the best events in your city. From conferences to concerts, workshops to festivals.
+              Find and book the best events in your city. From conferences to
+              concerts, workshops to festivals.
             </p>
           </div>
         </div>
@@ -360,35 +657,43 @@ export default function EnjoyorNewDesign() {
 
       {/* Main content area */}
       <section className="border-t hairline border-b">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-4 gap-8 py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-8 py-8">
           {/* Categories sidebar */}
-          <div className="lg:border-r hairline pr-0 lg:pr-8">
+          <div className="pr-0 lg:pr-8 lg:w-1/4">
             <h2 className="text-xl font-semibold mb-6">Browse Categories</h2>
             <CategoryList
               categories={categories}
-              selectedCategory={selectedCategory}
+              selectedCategory={filters.category}
               onCategorySelect={handleCategorySelect}
             />
           </div>
 
           {/* Events grid */}
-          <div className="lg:col-span-3">
+          <div className="lg:w-3/4">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-semibold">
-                  {selectedCategory ? `${selectedCategory} Events` : 
-                   debouncedSearch ? `Results for "${debouncedSearch}"` : 
-                   `Events in ${locationFilter}`}
+                  {filters.category
+                    ? `${filters.category} Events`
+                    : debouncedSearch
+                      ? `Results for "${debouncedSearch}"`
+                      : `Events${filters.location ? ` in ${filters.location}` : ""}`}
                 </h2>
                 <p className="text-muted mt-1">
-                  {loading ? 'Loading events...' : 
-                   events.length === 0 ? 'No events found' :
-                   pagination ? `${pagination.totalEvents} events found` : 
-                   `${events.length} events`}
+                  {loading
+                    ? "Loading events..."
+                    : events.length === 0
+                      ? "No events found"
+                      : pagination
+                        ? `${pagination.totalEvents} events found`
+                        : `${events.length} events`}
                 </p>
               </div>
-              {(selectedCategory || debouncedSearch) && (
-                <button onClick={clearFilters} className="btn btn-ghost text-sm">
+              {hasActiveFilters() && (
+                <button
+                  onClick={clearFilters}
+                  className="btn btn-ghost text-sm"
+                >
                   Clear filters
                 </button>
               )}
@@ -400,9 +705,11 @@ export default function EnjoyorNewDesign() {
             {/* Error State */}
             {error && (
               <div className="text-center py-12">
-                <div className="text-red-600 text-lg mb-4">Error loading events</div>
+                <div className="text-red-600 text-lg mb-4">
+                  Error loading events
+                </div>
                 <p className="text-muted mb-4">{error}</p>
-                <button 
+                <button
                   onClick={() => window.location.reload()}
                   className="btn btn-primary"
                 >
@@ -425,28 +732,37 @@ export default function EnjoyorNewDesign() {
                   <div className="mt-12 flex justify-center">
                     <div className="flex gap-2">
                       <button
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                        onClick={() =>
+                          setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
                         disabled={!pagination.hasPrevPage}
                         className="btn btn-ghost disabled:opacity-50"
                       >
                         Previous
                       </button>
-                      
-                      {Array.from({ length: Math.min(pagination.totalPages, 5) }, (_, i) => {
-                        const page = i + 1;
-                        return (
-                          <button
-                            key={page}
-                            onClick={() => setCurrentPage(page)}
-                            className={`btn ${currentPage === page ? 'btn-primary' : 'btn-ghost'}`}
-                          >
-                            {page}
-                          </button>
-                        );
-                      })}
-                      
+
+                      {Array.from(
+                        { length: Math.min(pagination.totalPages, 5) },
+                        (_, i) => {
+                          const page = i + 1;
+                          return (
+                            <button
+                              key={page}
+                              onClick={() => setCurrentPage(page)}
+                              className={`btn ${currentPage === page ? "btn-primary" : "btn-ghost"}`}
+                            >
+                              {page}
+                            </button>
+                          );
+                        },
+                      )}
+
                       <button
-                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, pagination.totalPages))}
+                        onClick={() =>
+                          setCurrentPage((prev) =>
+                            Math.min(prev + 1, pagination.totalPages),
+                          )
+                        }
                         disabled={!pagination.hasNextPage}
                         className="btn btn-ghost disabled:opacity-50"
                       >
@@ -462,7 +778,9 @@ export default function EnjoyorNewDesign() {
             {!loading && !error && events.length === 0 && (
               <div className="text-center py-12">
                 <h3 className="text-xl font-semibold mb-2">No events found</h3>
-                <p className="text-muted mb-6">Try adjusting your search criteria</p>
+                <p className="text-muted mb-6">
+                  Try adjusting your search criteria
+                </p>
                 <button onClick={clearFilters} className="btn btn-primary">
                   Show all events
                 </button>
@@ -496,7 +814,9 @@ export default function EnjoyorNewDesign() {
                 New Event Categories Added: Technology & Health Workshops
               </h3>
               <button className="btn btn-ghost w-fit">
-                <span className="inline-grid place-items-center h-6 w-6 rounded-full border hairline mr-1">↗</span>
+                <span className="inline-grid place-items-center h-6 w-6 rounded-full border hairline mr-1">
+                  ↗
+                </span>
                 Learn More
               </button>
             </div>

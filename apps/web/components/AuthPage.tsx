@@ -1,26 +1,38 @@
-import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, UserCheck, AlertCircle, CheckCircle } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  UserCheck,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 
 // Login Component
-export const LoginForm = ({ onLogin, onSwitchToRegister }: {
+export const LoginForm = ({
+  onLogin,
+  onSwitchToRegister,
+}: {
   onLogin: (email: string, password: string) => Promise<void>;
   onSwitchToRegister: () => void;
 }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       await onLogin(email, password);
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      setError(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -36,7 +48,9 @@ export const LoginForm = ({ onLogin, onSwitchToRegister }: {
               <span className="text-white font-bold text-2xl">E</span>
             </div>
             <h2 className="text-3xl font-bold text-gray-900">Welcome back</h2>
-            <p className="mt-2 text-gray-600">Sign in to your EventTix account</p>
+            <p className="mt-2 text-gray-600">
+              Sign in to your EventTix account
+            </p>
           </div>
 
           {/* Error Message */}
@@ -75,7 +89,7 @@ export const LoginForm = ({ onLogin, onSwitchToRegister }: {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -87,7 +101,11 @@ export const LoginForm = ({ onLogin, onSwitchToRegister }: {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -123,7 +141,7 @@ export const LoginForm = ({ onLogin, onSwitchToRegister }: {
                   Signing in...
                 </div>
               ) : (
-                'Sign in'
+                "Sign in"
               )}
             </button>
           </div>
@@ -131,7 +149,7 @@ export const LoginForm = ({ onLogin, onSwitchToRegister }: {
           {/* Register Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <button
                 onClick={onSwitchToRegister}
                 className="font-medium text-blue-600 hover:text-blue-500"
@@ -147,44 +165,51 @@ export const LoginForm = ({ onLogin, onSwitchToRegister }: {
 };
 
 // Register Component
-export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
+export const RegisterForm = ({
+  onRegister,
+  onSwitchToLogin,
+}: {
   onRegister: (userData: any) => Promise<void>;
   onSwitchToLogin: () => void;
 }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'CUSTOMER',
-    referredBy: ''
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "CUSTOMER",
+    referredBy: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const validateForm = () => {
-    if (!formData.name.trim()) return 'Name is required';
-    if (!formData.email.trim()) return 'Email is required';
-    if (formData.password.length < 6) return 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword) return 'Passwords do not match';
-    if (!agreedToTerms) return 'Please agree to the terms and conditions';
+    if (!formData.name.trim()) return "Name is required";
+    if (!formData.email.trim()) return "Email is required";
+    if (formData.password.length < 6)
+      return "Password must be at least 6 characters";
+    if (formData.password !== formData.confirmPassword)
+      return "Passwords do not match";
+    if (!agreedToTerms) return "Please agree to the terms and conditions";
     return null;
   };
 
   const handleSubmit = async () => {
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     const validationError = validateForm();
     if (validationError) {
@@ -200,13 +225,13 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
         email: formData.email,
         password: formData.password,
         role: formData.role,
-        ...(formData.referredBy && { referredBy: formData.referredBy })
+        ...(formData.referredBy && { referredBy: formData.referredBy }),
       };
 
       await onRegister(userData);
-      setSuccess('Account created successfully! You are now logged in.');
+      setSuccess("Account created successfully! You are now logged in.");
     } catch (err: any) {
-      setError(err.message || 'Registration failed');
+      setError(err.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -222,7 +247,9 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
               <span className="text-white font-bold text-2xl">E</span>
             </div>
             <h2 className="text-3xl font-bold text-gray-900">Create account</h2>
-            <p className="mt-2 text-gray-600">Join EventTix and discover amazing events</p>
+            <p className="mt-2 text-gray-600">
+              Join EventTix and discover amazing events
+            </p>
           </div>
 
           {/* Error Message */}
@@ -309,7 +336,7 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
                   onChange={handleChange}
@@ -321,7 +348,11 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -335,7 +366,7 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   name="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -347,7 +378,11 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -384,11 +419,11 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
               </div>
               <div className="ml-3 text-sm">
                 <label className="text-gray-700">
-                  I agree to the{' '}
+                  I agree to the{" "}
                   <button className="text-blue-600 hover:text-blue-500">
                     Terms and Conditions
-                  </button>{' '}
-                  and{' '}
+                  </button>{" "}
+                  and{" "}
                   <button className="text-blue-600 hover:text-blue-500">
                     Privacy Policy
                   </button>
@@ -408,7 +443,7 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
                   Creating account...
                 </div>
               ) : (
-                'Create account'
+                "Create account"
               )}
             </button>
           </div>
@@ -416,7 +451,7 @@ export const RegisterForm = ({ onRegister, onSwitchToLogin }: {
           {/* Login Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <button
                 onClick={onSwitchToLogin}
                 className="font-medium text-blue-600 hover:text-blue-500"
@@ -437,46 +472,46 @@ export default function AuthPage() {
   const [user, setUser] = useState(null);
 
   const handleLogin = async (email: string, password: string) => {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
-      method: 'POST',
+    const response = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message || 'Login failed');
+      throw new Error(error.message || "Login failed");
     }
 
     const data = await response.json();
-    
+
     // Store token and user data
-    localStorage.setItem('authToken', data.token);
-    localStorage.setItem('authUser', JSON.stringify(data.user));
+    localStorage.setItem("authToken", data.token);
+    localStorage.setItem("authUser", JSON.stringify(data.user));
     setUser(data.user);
   };
 
   const handleRegister = async (userData: any) => {
-    const response = await fetch('http://localhost:5000/api/auth/register', {
-      method: 'POST',
+    const response = await fetch("http://localhost:5000/api/auth/register", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(userData),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message || 'Registration failed');
+      throw new Error(error.message || "Registration failed");
     }
 
     const data = await response.json();
-    
+
     // Store token and user data
-    localStorage.setItem('authToken', data.token);
-    localStorage.setItem('authUser', JSON.stringify(data.user));
+    localStorage.setItem("authToken", data.token);
+    localStorage.setItem("authUser", JSON.stringify(data.user));
     setUser(data.user);
   };
 
@@ -489,10 +524,10 @@ export default function AuthPage() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome!</h2>
           <p className="text-gray-600 mb-6">
-            You have successfully {isLogin ? 'logged in' : 'registered'}.
+            You have successfully {isLogin ? "logged in" : "registered"}.
           </p>
           <button
-            onClick={() => window.location.href = '/'}
+            onClick={() => (window.location.href = "/")}
             className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors"
           >
             Go to Events
@@ -503,12 +538,12 @@ export default function AuthPage() {
   }
 
   return isLogin ? (
-    <LoginForm 
+    <LoginForm
       onLogin={handleLogin}
       onSwitchToRegister={() => setIsLogin(false)}
     />
   ) : (
-    <RegisterForm 
+    <RegisterForm
       onRegister={handleRegister}
       onSwitchToLogin={() => setIsLogin(true)}
     />
