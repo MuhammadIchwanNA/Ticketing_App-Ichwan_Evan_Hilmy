@@ -14,11 +14,11 @@
     at Object.<anonymous> [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichw[m
 [90m[13;104Hwan_Evan_Hilmy\apps\api\[msrc\server.ts:8:5[90m)[K[m
 [90m    at Module._compile (node:internal/modules/cjs/loader:1256:14)[m
-    at Module.m._compile [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwa[m
-[90m[13;104Han_Evan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1618:23[90m)[K[m
+    at Module.m._compile (C:\Users\Evan K J\Documents\Coding\purwadhika\mini-project\Ticketing_App-Ichwa
+[13;104Han_Evan_Hilmy\node_modules\[4mts-node[24m\src\index.ts:1618:23)[K
 [90m    at Module._extensions..js (node:internal/modules/cjs/loader:1310:10)[m
-    at Object.require.extensions.<computed> [as .ts] [90m(C:\Users\Evan K J\Documents\Coding\purwadhika\mini[m
-[90m[13;104Hi-project\Ticketing_App-Ichwan_Evan_Hilmy\apps\api\[mnode_modules\[4mts-node[24m\src\index.ts:1621:12[90m)[K[m
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\Evan K J\Documents\Coding\purwadhika\mini
+[13;104Hi-project\Ticketing_App-Ichwan_Evan_Hilmy\node_modules\[4mts-node[24m\src\index.ts:1621:12)[K
 [90m    at Module.load (node:internal/modules/cjs/loader:1119:32) [m{[K
   code: [32m'EADDRINUSE'[m,[K
   errno: [33m-4091[m,[K
