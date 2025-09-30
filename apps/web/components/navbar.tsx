@@ -25,9 +25,13 @@ export default function Navbar() {
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
           <span className="inline-grid place-items-center h-7 w-7 rounded-full border hairline bg-gradient-to-br from-[var(--mint)] to-[var(--sky)]">
-            <span className="text-xs font-bold text-[var(--foreground)]">E</span>
+            <span className="text-xs font-bold text-[var(--foreground)]">
+              E
+            </span>
           </span>
-          <span className="font-semibold tracking-tight text-gradient">Enjoyor</span>
+          <span className="font-semibold tracking-tight text-gradient">
+            Enjoyor
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -58,7 +62,9 @@ export default function Navbar() {
                   <Link
                     href="/dashboard"
                     className={`text-sm font-medium transition-colors hover:text-[var(--foreground)] ${
-                      pathname === "/dashboard" ? "text-[var(--foreground)]" : "text-muted"
+                      pathname === "/dashboard"
+                        ? "text-[var(--foreground)]"
+                        : "text-muted"
                     }`}
                   >
                     Dashboard
@@ -70,7 +76,9 @@ export default function Navbar() {
                 <Link
                   href="/profile"
                   className={`text-sm font-medium transition-colors hover:text-[var(--foreground)] ${
-                    pathname === "/profile" ? "text-[var(--foreground)]" : "text-muted"
+                    pathname === "/profile"
+                      ? "text-[var(--foreground)]"
+                      : "text-muted"
                   }`}
                 >
                   Profile
@@ -82,10 +90,15 @@ export default function Navbar() {
                       {user.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="text-xs font-medium text-muted">{user.name}</span>
+                  <span className="text-xs font-medium text-muted">
+                    {user.name}
+                  </span>
                 </div>
 
-                <button onClick={handleLogout} className="btn btn-ghost text-sm">
+                <button
+                  onClick={handleLogout}
+                  className="btn btn-ghost text-sm"
+                >
                   Logout
                 </button>
               </div>
@@ -98,7 +111,10 @@ export default function Navbar() {
               >
                 Login
               </Link>
-              <Link href="/auth?view=register" className="btn btn-primary text-sm">
+              <Link
+                href="/auth?view=register"
+                className="btn btn-primary text-sm"
+              >
                 Sign Up
               </Link>
             </div>
@@ -110,12 +126,19 @@ export default function Navbar() {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="md:hidden p-2 hover:bg-mint-tint rounded-lg transition-colors"
         >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+              d={
+                isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"
+              }
             />
           </svg>
         </button>
@@ -161,7 +184,9 @@ export default function Navbar() {
                     </span>
                   </div>
                   <span className="text-sm font-medium">{user.name}</span>
-                  <span className="text-xs text-muted">({user.role.toLowerCase()})</span>
+                  <span className="text-xs text-muted">
+                    ({user.role.toLowerCase()})
+                  </span>
                 </div>
 
                 <Link

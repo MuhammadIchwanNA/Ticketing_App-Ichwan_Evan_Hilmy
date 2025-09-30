@@ -11,11 +11,11 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken"); // 👈 get JWT
     if (token) {
-      (config.headers as AxiosRequestHeaders).Authorization =`Bearer ${token}`;
+      (config.headers as AxiosRequestHeaders).Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 export default api;

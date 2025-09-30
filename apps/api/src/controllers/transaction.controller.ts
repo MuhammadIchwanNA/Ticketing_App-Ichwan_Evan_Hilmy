@@ -27,7 +27,7 @@ export async function createTransaction(req: Request, res: Response) {
       eventId,
       Number(ticketCount),
       Number(pointsUsed) || 0,
-      paymentProof
+      paymentProof,
     );
 
     res.status(201).json(transaction);
@@ -43,9 +43,7 @@ export async function createTransaction(req: Request, res: Response) {
 export async function getTransactions(req: Request, res: Response) {
   try {
     const eventId = req.query.eventId as string;
-    const transactions = await transactionService.getTransactions(
-      eventId
-    );
+    const transactions = await transactionService.getTransactions(eventId);
     res.json(transactions);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -64,7 +62,7 @@ export async function acceptTransaction(req: Request, res: Response) {
 
     const transaction = await transactionService.acceptTransaction(
       transactionId,
-      organizerId as string
+      organizerId as string,
     );
 
     if (!transaction) throw new Error("Transaction not found");
@@ -83,7 +81,7 @@ export async function acceptTransaction(req: Request, res: Response) {
     await mailerHelper.sendMail(
       transaction.user.email,
       "Transaction Confirmed",
-      html
+      html,
     );
 
     res.json(transaction);
@@ -104,7 +102,7 @@ export async function rejectTransaction(req: Request, res: Response) {
 
     const transaction = await transactionService.rejectTransaction(
       transactionId,
-      organizerId as string
+      organizerId as string,
     );
 
     if (!transaction) throw new Error("Transaction not found");
@@ -122,7 +120,7 @@ export async function rejectTransaction(req: Request, res: Response) {
     await mailerHelper.sendMail(
       transaction.user.email,
       "Transaction Rejected",
-      html
+      html,
     );
 
     res.json(transaction);
@@ -138,9 +136,7 @@ export async function rejectTransaction(req: Request, res: Response) {
 export async function getPaymentProof(req: Request, res: Response) {
   try {
     const transactionId = req.params.id;
-    const proofUrl = await transactionService.getPaymentProof(
-      transactionId,
-    );
+    const proofUrl = await transactionService.getPaymentProof(transactionId);
 
     if (!proofUrl) {
       return res.status(404).json({ error: "Payment proof not found" });

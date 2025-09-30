@@ -12,7 +12,7 @@ export async function getAttendees(req: Request, res: Response) {
 
     const attendees = await attendeeService.getAttendees(
       organizerId as string,
-      eventId
+      eventId,
     );
     res.json(attendees);
   } catch (err: any) {

@@ -1,12 +1,12 @@
-'use client';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+"use client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default function ProtectedRoute({ 
-  children, 
-  allowedRoles = [] 
-}: { 
+export default function ProtectedRoute({
+  children,
+  allowedRoles = [],
+}: {
   children: React.ReactNode;
   allowedRoles?: string[];
 }) {
@@ -15,9 +15,13 @@ export default function ProtectedRoute({
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/auth');
-    } else if (user && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-      router.push('/');
+      router.push("/auth");
+    } else if (
+      user &&
+      allowedRoles.length > 0 &&
+      !allowedRoles.includes(user.role)
+    ) {
+      router.push("/");
     }
   }, [user, loading, router, allowedRoles]);
 

@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function getRegistrationTrends(
   organizerId: string,
-  range: string
+  range: string,
 ) {
   // Compute start date (last 3 buckets back)
   let startDate: Date;
@@ -34,8 +34,8 @@ export async function getRegistrationTrends(
   // Initialize buckets
   const buckets: { [key: string]: number } = {
     "Last 2": 0,
-    "Last": 0,
-    "Current": 0,
+    Last: 0,
+    Current: 0,
   };
 
   for (const tx of transactions) {

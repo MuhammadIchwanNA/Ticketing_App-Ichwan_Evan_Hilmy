@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
-import { eventAPI } from '@/lib/api';
-import { Event, EventsResponse } from '@/types';
+import { useState, useEffect } from "react";
+import { eventAPI } from "@/lib/api";
+import { Event, EventsResponse } from "@/types";
 
-export function useEvents(filters: {
-  search?: string;
-  category?: string;
-  location?: string;
-  page?: number;
-  limit?: number;
-} = {}) {
+export function useEvents(
+  filters: {
+    search?: string;
+    category?: string;
+    location?: string;
+    page?: number;
+    limit?: number;
+  } = {},
+) {
   const [events, setEvents] = useState<Event[]>([]);
   const [pagination, setPagination] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -17,7 +19,7 @@ export function useEvents(filters: {
   const fetchEvents = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response: EventsResponse = await eventAPI.getEvents(filters);
       setEvents(response.events);

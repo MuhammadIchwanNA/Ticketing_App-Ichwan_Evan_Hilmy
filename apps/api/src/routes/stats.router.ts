@@ -8,7 +8,7 @@ router.get(
   "/events/",
   authenticate,
   authorize("ORGANIZER"),
-  statsController.getRegistrationTrends
+  statsController.getRegistrationTrends,
 );
 
 export default router;
