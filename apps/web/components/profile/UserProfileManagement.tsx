@@ -1,27 +1,46 @@
-'use client';
-import React, { useState, useRef, useEffect } from 'react';
-import { User, Mail, Camera, Lock, Shield, Gift, Calendar, Trophy, Eye, EyeOff, X, Edit2, Save, AlertCircle, CheckCircle, Star, Users, TrendingUp } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { apiClient } from '@/lib/api';
+"use client";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  User,
+  Mail,
+  Camera,
+  Lock,
+  Shield,
+  Gift,
+  Calendar,
+  Trophy,
+  Eye,
+  EyeOff,
+  X,
+  Edit2,
+  Save,
+  AlertCircle,
+  CheckCircle,
+  Star,
+  Users,
+  TrendingUp,
+} from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { apiClient } from "@/lib/api";
 
 const UserProfileManagement = () => {
   const { user: authUser, logout } = useAuth();
   const [user, setUser] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [message, setMessage] = useState({ type: "", text: "" });
   const [tempData, setTempData] = useState<any>({});
   const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const [showPasswords, setShowPasswords] = useState({
     current: false,
     new: false,
-    confirm: false
+    confirm: false,
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,42 +53,47 @@ const UserProfileManagement = () => {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get('/api/auth/profile');
+      const response = await apiClient.get("/api/auth/profile");
       setUser(response.user);
       setTempData(response.user);
     } catch (error: any) {
-      setMessage({ type: 'error', text: 'Failed to load profile' });
-      console.error('Profile fetch error:', error);
+      setMessage({ type: "error", text: "Failed to load profile" });
+      console.error("Profile fetch error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setTempData((prev: any) => ({ ...prev, [name]: value }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setPasswordData(prev => ({ ...prev, [name]: value }));
+    setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
-    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
+  const togglePasswordVisibility = (field: "current" | "new" | "confirm") => {
+    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        setMessage({ type: 'error', text: 'Image must be less than 5MB' });
+        setMessage({ type: "error", text: "Image must be less than 5MB" });
         return;
       }
-      
+
       const reader = new FileReader();
       reader.onload = (e) => {
-        setTempData((prev: any) => ({ ...prev, profilePicture: (e.target as FileReader).result }));
+        setTempData((prev: any) => ({
+          ...prev,
+          profilePicture: (e.target as FileReader).result,
+        }));
       };
       reader.readAsDataURL(file);
     }
@@ -77,22 +101,25 @@ const UserProfileManagement = () => {
 
   const saveProfile = async () => {
     setSaving(true);
-    setMessage({ type: '', text: '' });
-    
+    setMessage({ type: "", text: "" });
+
     try {
-      await apiClient.put('/api/auth/profile', {
+      await apiClient.put("/api/auth/profile", {
         name: tempData.name,
         email: tempData.email,
-        profilePicture: tempData.profilePicture
+        profilePicture: tempData.profilePicture,
       });
-      
+
       setUser(tempData);
       // Update localStorage
-      localStorage.setItem('authUser', JSON.stringify(tempData));
+      localStorage.setItem("authUser", JSON.stringify(tempData));
       setIsEditing(false);
-      setMessage({ type: 'success', text: 'Profile updated successfully!' });
+      setMessage({ type: "success", text: "Profile updated successfully!" });
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'Failed to update profile' });
+      setMessage({
+        type: "error",
+        text: error.message || "Failed to update profile",
+      });
     } finally {
       setSaving(false);
     }
@@ -100,28 +127,38 @@ const UserProfileManagement = () => {
 
   const changePassword = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setMessage({ type: 'error', text: 'New passwords do not match' });
+      setMessage({ type: "error", text: "New passwords do not match" });
       return;
     }
-    
+
     if (passwordData.newPassword.length < 6) {
-      setMessage({ type: 'error', text: 'Password must be at least 6 characters long' });
+      setMessage({
+        type: "error",
+        text: "Password must be at least 6 characters long",
+      });
       return;
     }
 
     setSaving(true);
-    setMessage({ type: '', text: '' });
-    
+    setMessage({ type: "", text: "" });
+
     try {
-      await apiClient.put('/api/auth/change-password', {
+      await apiClient.put("/api/auth/change-password", {
         currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword
+        newPassword: passwordData.newPassword,
       });
-      
-      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-      setMessage({ type: 'success', text: 'Password changed successfully!' });
+
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+      setMessage({ type: "success", text: "Password changed successfully!" });
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'Failed to change password' });
+      setMessage({
+        type: "error",
+        text: error.message || "Failed to change password",
+      });
     } finally {
       setSaving(false);
     }
@@ -130,8 +167,8 @@ const UserProfileManagement = () => {
   const copyReferralCode = () => {
     if (user?.referralCode) {
       navigator.clipboard.writeText(user.referralCode);
-      setMessage({ type: 'success', text: 'Referral code copied!' });
-      setTimeout(() => setMessage({ type: '', text: '' }), 2000);
+      setMessage({ type: "success", text: "Referral code copied!" });
+      setTimeout(() => setMessage({ type: "", text: "" }), 2000);
     }
   };
 
@@ -169,18 +206,22 @@ const UserProfileManagement = () => {
           <div className="relative">
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-sky-400 to-mint-400 flex items-center justify-center overflow-hidden">
               {(isEditing ? tempData.profilePicture : user.profilePicture) ? (
-                <img 
-                  src={isEditing ? tempData.profilePicture : user.profilePicture}
-                  alt="Profile" 
+                <img
+                  src={
+                    isEditing ? tempData.profilePicture : user.profilePicture
+                  }
+                  alt="Profile"
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <span className="text-white font-bold text-2xl">
-                  {(isEditing ? tempData.name : user.name).charAt(0).toUpperCase()}
+                  {(isEditing ? tempData.name : user.name)
+                    .charAt(0)
+                    .toUpperCase()}
                 </span>
               )}
             </div>
-            
+
             {isEditing && (
               <button
                 onClick={() => fileInputRef.current?.click()}
@@ -189,7 +230,7 @@ const UserProfileManagement = () => {
                 <Camera className="w-4 h-4 text-white" />
               </button>
             )}
-            
+
             <input
               ref={fileInputRef}
               type="file"
@@ -213,9 +254,11 @@ const UserProfileManagement = () => {
                 ) : (
                   <h1 className="text-2xl font-bold">{user.name}</h1>
                 )}
-                <p className="text-muted capitalize mt-1">{user.role.toLowerCase()}</p>
+                <p className="text-muted capitalize mt-1">
+                  {user.role.toLowerCase()}
+                </p>
               </div>
-              
+
               <div className="flex gap-2">
                 {isEditing ? (
                   <>
@@ -241,7 +284,10 @@ const UserProfileManagement = () => {
                     </button>
                   </>
                 ) : (
-                  <button onClick={() => setIsEditing(true)} className="btn btn-ghost">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="btn btn-ghost"
+                  >
                     <Edit2 className="w-4 h-4" />
                     Edit
                   </button>
@@ -270,14 +316,19 @@ const UserProfileManagement = () => {
         <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
           <div className="text-center p-4 bg-mint-tint rounded-lg">
             <Trophy className="w-8 h-8 text-mint mx-auto mb-2" />
-            <div className="font-bold text-xl">{user.pointsBalance?.toLocaleString() || 0}</div>
+            <div className="font-bold text-xl">
+              {user.pointsBalance?.toLocaleString() || 0}
+            </div>
             <div className="text-sm text-muted">Points Balance</div>
           </div>
-          
+
           <div className="text-center p-4 bg-sky-tint rounded-lg">
             <Calendar className="w-8 h-8 text-sky mx-auto mb-2" />
             <div className="font-bold text-xl">
-              {new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+              {new Date(user.createdAt).toLocaleDateString("en-US", {
+                month: "short",
+                year: "numeric",
+              })}
             </div>
             <div className="text-sm text-muted">Member Since</div>
           </div>
@@ -293,13 +344,13 @@ const UserProfileManagement = () => {
           <Lock className="w-5 h-5" />
           Change Password
         </h3>
-        
+
         <div className="space-y-4 max-w-md">
           <div className="booking-field">
             <label className="booking-label">Current Password</label>
             <div className="relative">
               <input
-                type={showPasswords.current ? 'text' : 'password'}
+                type={showPasswords.current ? "text" : "password"}
                 value={passwordData.currentPassword}
                 onChange={handlePasswordChange}
                 name="currentPassword"
@@ -308,10 +359,14 @@ const UserProfileManagement = () => {
               />
               <button
                 type="button"
-                onClick={() => togglePasswordVisibility('current')}
+                onClick={() => togglePasswordVisibility("current")}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted"
               >
-                {showPasswords.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPasswords.current ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
               </button>
             </div>
           </div>
@@ -320,7 +375,7 @@ const UserProfileManagement = () => {
             <label className="booking-label">New Password</label>
             <div className="relative">
               <input
-                type={showPasswords.new ? 'text' : 'password'}
+                type={showPasswords.new ? "text" : "password"}
                 value={passwordData.newPassword}
                 onChange={handlePasswordChange}
                 name="newPassword"
@@ -329,10 +384,14 @@ const UserProfileManagement = () => {
               />
               <button
                 type="button"
-                onClick={() => togglePasswordVisibility('new')}
+                onClick={() => togglePasswordVisibility("new")}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted"
               >
-                {showPasswords.new ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPasswords.new ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
               </button>
             </div>
           </div>
@@ -341,7 +400,7 @@ const UserProfileManagement = () => {
             <label className="booking-label">Confirm New Password</label>
             <div className="relative">
               <input
-                type={showPasswords.confirm ? 'text' : 'password'}
+                type={showPasswords.confirm ? "text" : "password"}
                 value={passwordData.confirmPassword}
                 onChange={handlePasswordChange}
                 name="confirmPassword"
@@ -350,17 +409,25 @@ const UserProfileManagement = () => {
               />
               <button
                 type="button"
-                onClick={() => togglePasswordVisibility('confirm')}
+                onClick={() => togglePasswordVisibility("confirm")}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted"
               >
-                {showPasswords.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPasswords.confirm ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
               </button>
             </div>
           </div>
 
           <button
             onClick={changePassword}
-            disabled={saving || !passwordData.currentPassword || !passwordData.newPassword}
+            disabled={
+              saving ||
+              !passwordData.currentPassword ||
+              !passwordData.newPassword
+            }
             className="btn btn-primary disabled:opacity-50"
           >
             {saving ? (
@@ -382,13 +449,15 @@ const UserProfileManagement = () => {
           <Gift className="w-5 h-5" />
           Your Referral Code
         </h3>
-        
+
         <div className="bg-gradient-to-br from-mint-tint to-sky-tint rounded-xl p-6 text-center">
           <div className="mb-4">
             <div className="text-3xl font-bold mb-2">{user.referralCode}</div>
-            <p className="text-muted">Share this code with friends to earn rewards</p>
+            <p className="text-muted">
+              Share this code with friends to earn rewards
+            </p>
           </div>
-          
+
           <button onClick={copyReferralCode} className="btn btn-primary">
             Copy Referral Code
           </button>
@@ -404,27 +473,33 @@ const UserProfileManagement = () => {
             </div>
             <div>
               <p className="font-medium">Share Your Code</p>
-              <p className="text-sm text-muted">Give your referral code to friends</p>
+              <p className="text-sm text-muted">
+                Give your referral code to friends
+              </p>
             </div>
           </div>
-          
+
           <div className="flex items-start gap-3">
             <div className="w-8 h-8 bg-sky rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
               2
             </div>
             <div>
               <p className="font-medium">Friend Signs Up</p>
-              <p className="text-sm text-muted">They register using your code</p>
+              <p className="text-sm text-muted">
+                They register using your code
+              </p>
             </div>
           </div>
-          
+
           <div className="flex items-start gap-3">
             <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
               3
             </div>
             <div>
               <p className="font-medium">You Both Win</p>
-              <p className="text-sm text-muted">You get 10,000 points, they get a discount</p>
+              <p className="text-sm text-muted">
+                You get 10,000 points, they get a discount
+              </p>
             </div>
           </div>
         </div>
@@ -433,9 +508,9 @@ const UserProfileManagement = () => {
   );
 
   const tabs = [
-    { id: 'profile', name: 'Profile', icon: User },
-    { id: 'security', name: 'Security', icon: Shield },
-    { id: 'referrals', name: 'Referrals', icon: Gift }
+    { id: "profile", name: "Profile", icon: User },
+    { id: "security", name: "Security", icon: Shield },
+    { id: "referrals", name: "Referrals", icon: Gift },
   ];
 
   return (
@@ -447,10 +522,14 @@ const UserProfileManagement = () => {
         </div>
 
         {message.text && (
-          <div className={`mb-6 p-4 rounded-lg flex items-center ${
-            message.type === 'success' ? 'bg-mint-tint border border-mint-500' : 'bg-rose-tint border border-rose-500'
-          }`}>
-            {message.type === 'success' ? (
+          <div
+            className={`mb-6 p-4 rounded-lg flex items-center ${
+              message.type === "success"
+                ? "bg-mint-tint border border-mint-500"
+                : "bg-rose-tint border border-rose-500"
+            }`}
+          >
+            {message.type === "success" ? (
               <CheckCircle className="w-5 h-5 text-mint mr-3 flex-shrink-0" />
             ) : (
               <AlertCircle className="w-5 h-5 text-rose mr-3 flex-shrink-0" />
@@ -471,8 +550,8 @@ const UserProfileManagement = () => {
                       onClick={() => setActiveTab(tab.id)}
                       className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all ${
                         activeTab === tab.id
-                          ? 'bg-sky-tint text-ink font-medium'
-                          : 'text-muted hover:text-ink hover:bg-mint-tint'
+                          ? "bg-sky-tint text-ink font-medium"
+                          : "text-muted hover:text-ink hover:bg-mint-tint"
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -485,9 +564,9 @@ const UserProfileManagement = () => {
           </div>
 
           <div className="lg:col-span-3">
-            {activeTab === 'profile' && <ProfileContent />}
-            {activeTab === 'security' && <SecurityContent />}
-            {activeTab === 'referrals' && <ReferralsContent />}
+            {activeTab === "profile" && <ProfileContent />}
+            {activeTab === "security" && <SecurityContent />}
+            {activeTab === "referrals" && <ReferralsContent />}
           </div>
         </div>
       </div>

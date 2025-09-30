@@ -1,14 +1,26 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import { 
-  Calendar, MapPin, Users, Clock, Star, Share2, 
-  Heart, Bookmark, ArrowLeft, ExternalLink,
-  Facebook, Twitter, Instagram, Copy, Check
-} from 'lucide-react';
-import { Event } from '@/types';
-import { eventAPI } from '@/lib/api';
+import React, { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import {
+  Calendar,
+  MapPin,
+  Users,
+  Clock,
+  Star,
+  Share2,
+  Heart,
+  Bookmark,
+  ArrowLeft,
+  ExternalLink,
+  Facebook,
+  Twitter,
+  Instagram,
+  Copy,
+  Check,
+} from "lucide-react";
+import { Event } from "@/types";
+import { eventAPI } from "@/lib/api";
 
 interface EventDetails extends Event {
   reviews: Array<{
@@ -25,14 +37,14 @@ interface EventDetails extends Event {
     id: string;
     code: string;
     discount: number;
-    discountType: 'PERCENTAGE' | 'FIXED';
+    discountType: "PERCENTAGE" | "FIXED";
   }>;
 }
 
 export default function EventDetailsPage() {
   const params = useParams();
   const eventId = params.id as string;
-  
+
   const [event, setEvent] = useState<EventDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,35 +69,42 @@ export default function EventDetailsPage() {
   };
 
   const formatPrice = (price: number) => {
-    if (price === 0) return 'Free';
-    return new Intl.NumberFormat('id-ID', { 
-      style: 'currency', 
-      currency: 'IDR',
-      maximumFractionDigits: 0 
+    if (price === 0) return "Free";
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0,
     }).format(price);
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return {
-      day: date.toLocaleDateString('en-US', { weekday: 'long' }),
-      date: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      time: date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+      day: date.toLocaleDateString("en-US", { weekday: "long" }),
+      date: date.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }),
+      time: date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
   };
 
   const getAvailabilityStatus = (available: number, total: number) => {
     const ratio = available / total;
-    if (ratio > 0.5) return { text: 'Available', class: 'status-available' };
-    if (ratio > 0.2) return { text: 'Limited', class: 'status-limited' };
-    return { text: 'Almost Sold Out', class: 'status-sold-out' };
+    if (ratio > 0.5) return { text: "Available", class: "status-available" };
+    if (ratio > 0.2) return { text: "Limited", class: "status-limited" };
+    return { text: "Almost Sold Out", class: "status-sold-out" };
   };
 
   const shareEvent = async (platform?: string) => {
     const url = window.location.href;
     const text = `Check out this event: ${event?.name}`;
-    
-    if (platform === 'copy') {
+
+    if (platform === "copy") {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -95,11 +114,11 @@ export default function EventDetailsPage() {
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
-      whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
     };
 
     if (platform && shareUrls[platform as keyof typeof shareUrls]) {
-      window.open(shareUrls[platform as keyof typeof shareUrls], '_blank');
+      window.open(shareUrls[platform as keyof typeof shareUrls], "_blank");
     }
   };
 
@@ -128,8 +147,10 @@ export default function EventDetailsPage() {
       <div className="min-h-screen bg-cream flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Event Not Found</h1>
-          <p className="text-muted mb-6">{error || 'This event may have been removed or is not available.'}</p>
-          <button 
+          <p className="text-muted mb-6">
+            {error || "This event may have been removed or is not available."}
+          </p>
+          <button
             onClick={() => window.history.back()}
             className="btn btn-primary"
           >
@@ -143,14 +164,17 @@ export default function EventDetailsPage() {
 
   const startDate = formatDate(event.startDate);
   const endDate = formatDate(event.endDate);
-  const availability = getAvailabilityStatus(event.availableSeats, event.totalSeats);
+  const availability = getAvailabilityStatus(
+    event.availableSeats,
+    event.totalSeats,
+  );
 
   return (
     <div className="min-h-screen bg-cream">
       {/* Header */}
       <div className="bg-white border-b hairline">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <button 
+          <button
             onClick={() => window.history.back()}
             className="btn btn-ghost text-sm mb-4"
           >
@@ -167,8 +191,8 @@ export default function EventDetailsPage() {
             {/* Hero Image */}
             <div className="relative aspect-[5/3] rounded-xl overflow-hidden mb-8">
               {event.imageUrl ? (
-                <img 
-                  src={event.imageUrl} 
+                <img
+                  src={event.imageUrl}
                   alt={event.name}
                   className="w-full h-full object-cover"
                 />
@@ -180,18 +204,22 @@ export default function EventDetailsPage() {
                   </div>
                 </div>
               )}
-              
+
               {/* Action buttons overlay */}
               <div className="absolute top-4 right-4 flex gap-2">
                 <button
                   onClick={toggleBookmark}
                   className={`p-2 rounded-lg backdrop-blur-sm border ${
-                    isBookmarked 
-                      ? 'bg-rose-500 text-white border-rose-500' 
-                      : 'bg-white/90 text-gray-700 border-white/20'
+                    isBookmarked
+                      ? "bg-rose-500 text-white border-rose-500"
+                      : "bg-white/90 text-gray-700 border-white/20"
                   }`}
                 >
-                  {isBookmarked ? <Heart className="w-5 h-5 fill-current" /> : <Heart className="w-5 h-5" />}
+                  {isBookmarked ? (
+                    <Heart className="w-5 h-5 fill-current" />
+                  ) : (
+                    <Heart className="w-5 h-5" />
+                  )}
                 </button>
                 <button
                   onClick={() => setShowShareModal(true)}
@@ -206,7 +234,9 @@ export default function EventDetailsPage() {
             <div className="card p-8">
               <div className="flex items-center gap-3 mb-4">
                 <span className="chip">{event.category}</span>
-                <span className={`text-xs px-3 py-1 rounded-full ${availability.class}`}>
+                <span
+                  className={`text-xs px-3 py-1 rounded-full ${availability.class}`}
+                >
                   {availability.text}
                 </span>
               </div>
@@ -220,7 +250,9 @@ export default function EventDetailsPage() {
                     <Calendar className="w-5 h-5 text-sky-500" />
                     <div>
                       <p className="font-medium">{startDate.day}</p>
-                      <p className="text-sm text-muted">{startDate.date} at {startDate.time}</p>
+                      <p className="text-sm text-muted">
+                        {startDate.date} at {startDate.time}
+                      </p>
                     </div>
                   </div>
 
@@ -236,8 +268,12 @@ export default function EventDetailsPage() {
                   <div className="flex items-center gap-3">
                     <Users className="w-5 h-5 text-rose-500" />
                     <div>
-                      <p className="font-medium">{event.availableSeats} seats available</p>
-                      <p className="text-sm text-muted">of {event.totalSeats} total</p>
+                      <p className="font-medium">
+                        {event.availableSeats} seats available
+                      </p>
+                      <p className="text-sm text-muted">
+                        of {event.totalSeats} total
+                      </p>
                     </div>
                   </div>
 
@@ -245,8 +281,10 @@ export default function EventDetailsPage() {
                     <Star className="w-5 h-5 text-yellow-500" />
                     <div>
                       <p className="font-medium">
-                        {event.averageRating?.toFixed(1) || 'New'} 
-                        {event.totalReviews ? ` (${event.totalReviews} reviews)` : ''}
+                        {event.averageRating?.toFixed(1) || "New"}
+                        {event.totalReviews
+                          ? ` (${event.totalReviews} reviews)`
+                          : ""}
                       </p>
                     </div>
                   </div>
@@ -255,9 +293,13 @@ export default function EventDetailsPage() {
 
               {/* Description */}
               <div className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4">About This Event</h2>
+                <h2 className="text-2xl font-semibold mb-4">
+                  About This Event
+                </h2>
                 <div className="prose max-w-none">
-                  <p className="text-muted leading-relaxed">{event.description}</p>
+                  <p className="text-muted leading-relaxed">
+                    {event.description}
+                  </p>
                 </div>
               </div>
 
@@ -279,15 +321,22 @@ export default function EventDetailsPage() {
             {/* Vouchers */}
             {event.vouchers && event.vouchers.length > 0 && (
               <div className="card p-6 mt-6">
-                <h3 className="text-xl font-semibold mb-4">Available Discounts</h3>
+                <h3 className="text-xl font-semibold mb-4">
+                  Available Discounts
+                </h3>
                 <div className="space-y-3">
                   {event.vouchers.map((voucher) => (
-                    <div key={voucher.id} className="flex items-center justify-between p-4 bg-banana-tint rounded-lg">
+                    <div
+                      key={voucher.id}
+                      className="flex items-center justify-between p-4 bg-banana-tint rounded-lg"
+                    >
                       <div>
                         <p className="font-semibold text-lg">{voucher.code}</p>
                         <p className="text-sm text-muted">
                           {voucher.discount}
-                          {voucher.discountType === 'PERCENTAGE' ? '% off' : ' IDR off'}
+                          {voucher.discountType === "PERCENTAGE"
+                            ? "% off"
+                            : " IDR off"}
                         </p>
                       </div>
                       <button
@@ -326,9 +375,9 @@ export default function EventDetailsPage() {
                               <Star
                                 key={i}
                                 className={`w-4 h-4 ${
-                                  i < review.rating 
-                                    ? 'text-yellow-500 fill-current' 
-                                    : 'text-gray-300'
+                                  i < review.rating
+                                    ? "text-yellow-500 fill-current"
+                                    : "text-gray-300"
                                 }`}
                               />
                             ))}
@@ -353,7 +402,9 @@ export default function EventDetailsPage() {
             <div className="sticky top-8">
               <div className="card p-6">
                 <div className="text-center mb-6">
-                  <p className="text-3xl font-bold">{formatPrice(event.price)}</p>
+                  <p className="text-3xl font-bold">
+                    {formatPrice(event.price)}
+                  </p>
                   <p className="text-muted">per ticket</p>
                 </div>
 
@@ -367,7 +418,9 @@ export default function EventDetailsPage() {
 
                   <div className="text-sm">
                     <p className="font-medium mb-1">Available Tickets</p>
-                    <p className="text-muted">{event.availableSeats} remaining</p>
+                    <p className="text-muted">
+                      {event.availableSeats} remaining
+                    </p>
                   </div>
                 </div>
 
@@ -375,7 +428,7 @@ export default function EventDetailsPage() {
                   disabled={event.availableSeats === 0}
                   className="w-full btn btn-primary mb-4 disabled:opacity-50"
                 >
-                  {event.availableSeats === 0 ? 'Sold Out' : 'Book Now'}
+                  {event.availableSeats === 0 ? "Sold Out" : "Book Now"}
                 </button>
 
                 <button
@@ -407,7 +460,7 @@ export default function EventDetailsPage() {
 
             <div className="space-y-3">
               <button
-                onClick={() => shareEvent('facebook')}
+                onClick={() => shareEvent("facebook")}
                 className="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg border"
               >
                 <Facebook className="w-5 h-5 text-blue-600" />
@@ -415,7 +468,7 @@ export default function EventDetailsPage() {
               </button>
 
               <button
-                onClick={() => shareEvent('twitter')}
+                onClick={() => shareEvent("twitter")}
                 className="w-full flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg border"
               >
                 <Twitter className="w-5 h-5 text-blue-400" />
@@ -423,17 +476,21 @@ export default function EventDetailsPage() {
               </button>
 
               <button
-                onClick={() => shareEvent('whatsapp')}
+                onClick={() => shareEvent("whatsapp")}
                 className="w-full flex items-center gap-3 p-3 hover:bg-green-50 rounded-lg border"
               >
-                <svg className="w-5 h-5 text-green-600" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                <svg
+                  className="w-5 h-5 text-green-600"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
                 </svg>
                 Share on WhatsApp
               </button>
 
               <button
-                onClick={() => shareEvent('copy')}
+                onClick={() => shareEvent("copy")}
                 className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg border"
               >
                 {copied ? (

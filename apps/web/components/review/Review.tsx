@@ -25,7 +25,7 @@ export default function Review() {
       try {
         const res = await api.get("/reviews");
         console.log(res.data);
-        
+
         setEvents(res.data.events || []);
       } catch (err) {
         console.error("Failed to fetch unreviewed events:", err);
@@ -61,11 +61,13 @@ export default function Review() {
       <h2 className="text-2xl font-bold mb-6">Review</h2>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-    {events.map((event) => (
+        {events.map((event) => (
           <Card key={event.eventId} className="shadow-md rounded-2xl">
             <CardHeader>
               <CardTitle>{event.name}</CardTitle>
-              <p className="text-sm text-muted-foreground">{event.description}</p>
+              <p className="text-sm text-muted-foreground">
+                {event.description}
+              </p>
               <p className="text-xs text-gray-500">
                 Ended on {new Date(event.endDate).toLocaleDateString()}
               </p>
@@ -77,7 +79,9 @@ export default function Review() {
                   <Star
                     key={num}
                     className={`w-6 h-6 cursor-pointer ${
-                      ratings[event.eventId] >= num ? "text-yellow-400 fill-yellow-400" : "text-gray-400"
+                      ratings[event.eventId] >= num
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-400"
                     }`}
                     onClick={() => handleRating(event.eventId, num)}
                   />
@@ -89,7 +93,10 @@ export default function Review() {
                 placeholder="Write a comment..."
                 value={comments[event.eventId] || ""}
                 onChange={(e) =>
-                  setComments((prev) => ({ ...prev, [event.eventId]: e.target.value }))
+                  setComments((prev) => ({
+                    ...prev,
+                    [event.eventId]: e.target.value,
+                  }))
                 }
                 className="mb-3"
               />

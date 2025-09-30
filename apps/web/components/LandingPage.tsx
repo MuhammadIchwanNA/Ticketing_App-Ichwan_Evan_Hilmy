@@ -62,7 +62,7 @@ function useEvents(
     dateEnd?: string;
     page?: number;
     limit?: number;
-  } = {}
+  } = {},
 ) {
   const [events, setEvents] = useState<Event[]>([]);
   const [pagination, setPagination] = useState<any>(null);
@@ -213,7 +213,7 @@ const EnhancedSearchStrip = ({
             onChange={(e) =>
               updateFilter(
                 "category",
-                e.target.value === "All Categories" ? "" : e.target.value
+                e.target.value === "All Categories" ? "" : e.target.value,
               )
             }
             className="booking-value bg-transparent border-none outline-none w-full appearance-none"
@@ -340,7 +340,7 @@ const EnhancedSearchStrip = ({
                     onChange={(e) => {
                       const today = new Date().toISOString().split("T")[0];
                       const nextWeek = new Date(
-                        Date.now() + 7 * 24 * 60 * 60 * 1000
+                        Date.now() + 7 * 24 * 60 * 60 * 1000,
                       )
                         .toISOString()
                         .split("T")[0];
@@ -754,13 +754,13 @@ export default function LandingPage() {
                               {page}
                             </button>
                           );
-                        }
+                        },
                       )}
 
                       <button
                         onClick={() =>
                           setCurrentPage((prev) =>
-                            Math.min(prev + 1, pagination.totalPages)
+                            Math.min(prev + 1, pagination.totalPages),
                           )
                         }
                         disabled={!pagination.hasNextPage}

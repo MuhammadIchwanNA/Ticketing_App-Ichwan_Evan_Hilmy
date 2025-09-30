@@ -79,7 +79,7 @@ export const TransactionsContent = () => {
 
   const handleTransactionAction = async (
     transactionId: string,
-    action: "approve" | "reject"
+    action: "approve" | "reject",
   ) => {
     try {
       if (action === "approve") {
@@ -95,8 +95,8 @@ export const TransactionsContent = () => {
                 ...t,
                 status: action === "approve" ? "CONFIRMED" : "REJECTED",
               }
-            : t
-        )
+            : t,
+        ),
       );
     } catch (error) {
       console.error(`Error performing ${action}:`, error);
@@ -121,10 +121,7 @@ export const TransactionsContent = () => {
             </thead>
             <tbody className="divide-y">
               {transactions.map((transaction) => (
-                <tr
-                  key={transaction.id}
-                  className=""
-                >
+                <tr key={transaction.id} className="">
                   <td className="p-4">
                     <div>
                       <div className="font-medium">
@@ -147,7 +144,7 @@ export const TransactionsContent = () => {
                   <td className="p-4">
                     <span
                       className={`chip ${getTransactionStatusColor(
-                        transaction.status
+                        transaction.status,
                       )}`}
                     >
                       {transaction.status.replace("_", " ")}
@@ -183,7 +180,10 @@ export const TransactionsContent = () => {
                       {transaction.paymentProof && (
                         <button
                           onClick={() =>
-                            window.open(transaction.paymentProof as string, "_blank")
+                            window.open(
+                              transaction.paymentProof as string,
+                              "_blank",
+                            )
                           }
                           className="p-2 rounded-lg"
                           title="View Payment Proof"

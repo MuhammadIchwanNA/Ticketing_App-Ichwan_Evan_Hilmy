@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import EventCreateDashboard from '@/components/dashboard/EventCreateDashboard';
+import EventCreateDashboard from "@/components/dashboard/EventCreateDashboard";
 
 export default function CreateEventPage() {
   return <EventCreateDashboard />;

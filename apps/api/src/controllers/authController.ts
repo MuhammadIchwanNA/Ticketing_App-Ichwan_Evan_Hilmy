@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
-import { PrismaClient } from '@prisma/client';
-import { hashPassword, comparePassword } from '../utils/password';
-import { generateToken } from '../utils/jwt';
-import { generateReferralCode } from '../utils/referral';
+import { Request, Response } from "express";
+import { validationResult } from "express-validator";
+import { PrismaClient } from "@prisma/client";
+import { hashPassword, comparePassword } from "../utils/password";
+import { generateToken } from "../utils/jwt";
+import { generateReferralCode } from "../utils/referral";
 
 const prisma = new PrismaClient();
 
@@ -12,28 +12,28 @@ export const register = async (req: Request, res: Response) => {
     // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ 
-        message: 'Validation failed',
-        errors: errors.array() 
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: errors.array(),
       });
     }
 
-    const { email, password, name, role = 'CUSTOMER', referredBy } = req.body;
+    const { email, password, name, role = "CUSTOMER", referredBy } = req.body;
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     // Validate referral code if provided
     let referrer = null;
     if (referredBy) {
       referrer = await prisma.user.findUnique({
-        where: { referralCode: referredBy }
+        where: { referralCode: referredBy },
       });
       if (!referrer) {
-        return res.status(400).json({ message: 'Invalid referral code' });
+        return res.status(400).json({ message: "Invalid referral code" });
       }
     }
 
@@ -49,8 +49,8 @@ export const register = async (req: Request, res: Response) => {
         name,
         role: role.toUpperCase(),
         referralCode,
-        referredBy: referredBy || null
-      }
+        referredBy: referredBy || null,
+      },
     });
 
     // If user was referred, give rewards
@@ -58,7 +58,7 @@ export const register = async (req: Request, res: Response) => {
       // Give referrer 10,000 points
       await prisma.user.update({
         where: { id: referrer.id },
-        data: { pointsBalance: { increment: 10000 } }
+        data: { pointsBalance: { increment: 10000 } },
       });
 
       // Create points history
@@ -66,10 +66,10 @@ export const register = async (req: Request, res: Response) => {
         data: {
           userId: referrer.id,
           points: 10000,
-          type: 'EARNED',
+          type: "EARNED",
           description: `Referral reward for inviting ${email}`,
-          expiresAt: new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000) // 3 months
-        }
+          expiresAt: new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000), // 3 months
+        },
       });
 
       // Give new user a discount coupon
@@ -78,9 +78,9 @@ export const register = async (req: Request, res: Response) => {
           userId: user.id,
           code: `WELCOME${user.referralCode}`,
           discount: 10, // 10% discount
-          discountType: 'PERCENTAGE',
-          expiresAt: new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000) // 3 months
-        }
+          discountType: "PERCENTAGE",
+          expiresAt: new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000), // 3 months
+        },
       });
     }
 
@@ -88,60 +88,11 @@ export const register = async (req: Request, res: Response) => {
     const token = generateToken({
       userId: user.id,
       email: user.email,
-      role: user.role
+      role: user.role,
     });
 
     res.status(201).json({
-      message: 'User registered successfully',
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        referralCode: user.referralCode,
-        pointsBalance: user.pointsBalance
-      }
-    });
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
-
-export const login = async (req: Request, res: Response) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ 
-        message: 'Validation failed',
-        errors: errors.array() 
-      });
-    }
-
-    const { email, password } = req.body;
-
-    // Find user
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    // Check password
-    const isPasswordValid = await comparePassword(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    // Generate JWT token
-    const token = generateToken({
-      userId: user.id,
-      email: user.email,
-      role: user.role
-    });
-
-    res.json({
-      message: 'Login successful',
+      message: "User registered successfully",
       token,
       user: {
         id: user.id,
@@ -150,12 +101,61 @@ export const login = async (req: Request, res: Response) => {
         role: user.role,
         referralCode: user.referralCode,
         pointsBalance: user.pointsBalance,
-        profilePicture: user.profilePicture
-      }
+      },
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Registration error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const login = async (req: Request, res: Response) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: errors.array(),
+      });
+    }
+
+    const { email, password } = req.body;
+
+    // Find user
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // Check password
+    const isPasswordValid = await comparePassword(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // Generate JWT token
+    const token = generateToken({
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+    });
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        referralCode: user.referralCode,
+        pointsBalance: user.pointsBalance,
+        profilePicture: user.profilePicture,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -171,17 +171,17 @@ export const getProfile = async (req: Request, res: Response) => {
         referralCode: true,
         pointsBalance: true,
         profilePicture: true,
-        createdAt: true
-      }
+        createdAt: true,
+      },
     });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.json({ user });
   } catch (error) {
-    console.error('Get profile error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Get profile error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

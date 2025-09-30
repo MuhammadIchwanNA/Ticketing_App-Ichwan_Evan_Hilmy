@@ -8,32 +8,32 @@ router.post(
   "/",
   authenticate,
   authorize("CUSTOMER"),
-  transactionController.createTransaction
+  transactionController.createTransaction,
 );
 
 router.get(
   "/",
   authenticate,
   authorize("ORGANIZER"),
-  transactionController.getTransactions
+  transactionController.getTransactions,
 );
 router.put(
   "/:id/accept",
   authenticate,
   authorize("ORGANIZER"),
-  transactionController.acceptTransaction
+  transactionController.acceptTransaction,
 );
 router.put(
   "/:id/reject",
   authenticate,
   authorize("ORGANIZER"),
-  transactionController.rejectTransaction
+  transactionController.rejectTransaction,
 );
 router.get(
   "/:id/payment-proof",
   authenticate,
   authorize("ORGANIZER"),
-  transactionController.getPaymentProof
+  transactionController.getPaymentProof,
 );
 
 export default router;
