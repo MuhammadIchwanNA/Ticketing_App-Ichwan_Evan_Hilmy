@@ -8,7 +8,7 @@ router.get(
   "/events/:eventId",
   authenticate,
   authorize("ORGANIZER"),
-  attendeeController.getAttendees
+  attendeeController.getAttendees,
 );
 
 export default router;

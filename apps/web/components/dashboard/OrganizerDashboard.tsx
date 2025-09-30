@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import {Calendar, DollarSign, BarChart3} from "lucide-react";
+import { Calendar, DollarSign, BarChart3 } from "lucide-react";
 import { OverviewContent } from "./OverviewContent";
 import { EventsContent } from "./EventContent";
 import { TransactionsContent } from "./TransactionContent";
 
 const OrganizerDashboard = () => {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "events" | "transactions" 
+    "overview" | "events" | "transactions"
   >("overview");
 
   const tabs = [
@@ -57,7 +57,6 @@ const OrganizerDashboard = () => {
           {activeTab === "events" && <EventsContent />}
           {activeTab === "transactions" && <TransactionsContent />}
         </div>
-
       </div>
     </div>
   );

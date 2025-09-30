@@ -12,19 +12,24 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Enjoyor – Find events you'll love",
+  title: "Enjoyor &mdash Find events you'll love",
   description: "Discover and book the best events in your city or online.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className={`${plusJakarta.variable} antialiased font-sans`}>
-        <AuthProvider>
+        {/* <AuthProvider>
           <Navbar />
           {children}
           <Footer />
-        </AuthProvider>
+        </AuthProvider> */}
+        <h1>Hello World!</h1>
       </body>
     </html>
   );

@@ -9,7 +9,7 @@ export async function createTransaction(
   eventId: string,
   ticketCount: number,
   pointsUsed: number = 0,
-  paymentProof: string
+  paymentProof: string,
 ) {
   // Get event info (you may have ticket price in Event model)
   const event = await prisma.event.findUnique({
@@ -43,9 +43,8 @@ export async function createTransaction(
 }
 
 export async function getTransactions(eventId: string) {
-
   return prisma.transaction.findMany({
-    where: { eventId: eventId},
+    where: { eventId: eventId },
     include: {
       user: { select: { id: true, name: true, email: true } },
       event: { select: { id: true, name: true } },
@@ -59,7 +58,7 @@ export async function getTransactions(eventId: string) {
  */
 export async function acceptTransaction(
   transactionId: string,
-  organizerId: string
+  organizerId: string,
 ) {
   const tx = await prisma.transaction.findUnique({
     where: { id: transactionId },
@@ -84,7 +83,7 @@ export async function acceptTransaction(
  */
 export async function rejectTransaction(
   transactionId: string,
-  organizerId: string
+  organizerId: string,
 ) {
   const tx = await prisma.transaction.findUnique({
     where: { id: transactionId },
@@ -93,7 +92,6 @@ export async function rejectTransaction(
 
   if (!tx) throw new Error("Transaction not found");
   if (tx.event.organizerId !== organizerId) throw new Error("Unauthorized");
-
 
   return prisma.transaction.update({
     where: { id: transactionId },
@@ -108,9 +106,7 @@ export async function rejectTransaction(
 /**
  * Get payment proof URL
  */
-export async function getPaymentProof(
-  transactionId: string,
-) {
+export async function getPaymentProof(transactionId: string) {
   const tx = await prisma.transaction.findUnique({
     where: { id: transactionId },
     include: { event: true },

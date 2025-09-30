@@ -32,7 +32,7 @@ const EditModal = ({
   // Handle update (call API)
   const handleUpdateEvent = async (
     eventId: string,
-    updatedData: typeof formData
+    updatedData: typeof formData,
   ) => {
     try {
       await api.put(`/events/${eventId}`, {
@@ -233,5 +233,3 @@ const EditModal = ({
 };
 
 export default EditModal;
-
-

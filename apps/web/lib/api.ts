@@ -1,14 +1,14 @@
 // API base configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 // API client with auth headers
 export const apiClient = {
   async request(endpoint: string, options: RequestInit = {}) {
-    const token = localStorage.getItem('authToken');
-    
+    const token = localStorage.getItem("authToken");
+
     const config: RequestInit = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...(token && { Authorization: `Bearer ${token}` }),
         ...options.headers,
       },
@@ -16,10 +16,12 @@ export const apiClient = {
     };
 
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    
+
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Network error' }));
-      throw new Error(error.message || 'API request failed');
+      const error = await response
+        .json()
+        .catch(() => ({ message: "Network error" }));
+      throw new Error(error.message || "API request failed");
     }
 
     return response.json();
@@ -31,21 +33,21 @@ export const apiClient = {
 
   post(endpoint: string, data: any) {
     return this.request(endpoint, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(data),
     });
   },
 
   put(endpoint: string, data: any) {
     return this.request(endpoint, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(data),
     });
   },
 
   delete(endpoint: string) {
     return this.request(endpoint, {
-      method: 'DELETE',
+      method: "DELETE",
     });
   },
 };
@@ -53,40 +55,43 @@ export const apiClient = {
 // Event API functions
 export const eventAPI = {
   // Get all events with filters
-  getEvents: (params: {
-    search?: string;
-    category?: string;
-    location?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    page?: number;
-    limit?: number;
-  } = {}) => {
+  getEvents: (
+    params: {
+      search?: string;
+      category?: string;
+      location?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      page?: number;
+      limit?: number;
+    } = {},
+  ) => {
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
+      if (value !== undefined && value !== null && value !== "") {
         queryParams.append(key, value.toString());
       }
     });
-    
+
     const queryString = queryParams.toString();
-    return apiClient.get(`/api/events${queryString ? `?${queryString}` : ''}`);
+    return apiClient.get(`/api/events${queryString ? `?${queryString}` : ""}`);
   },
 
   // Get single event
   getEvent: (id: string) => apiClient.get(`/api/events/${id}`),
 
   // Create event (organizer only)
-  createEvent: (eventData: any) => apiClient.post('/api/events', eventData),
+  createEvent: (eventData: any) => apiClient.post("/api/events", eventData),
 
   // Update event (organizer only)
-  updateEvent: (id: string, eventData: any) => apiClient.put(`/api/events/${id}`, eventData),
+  updateEvent: (id: string, eventData: any) =>
+    apiClient.put(`/api/events/${id}`, eventData),
 
   // Delete event (organizer only)
   deleteEvent: (id: string) => apiClient.delete(`/api/events/${id}`),
 
   // Get organizer's events
-  getMyEvents: () => apiClient.get('/api/events/organizer/my-events'),
+  getMyEvents: () => apiClient.get("/api/events/organizer/my-events"),
 };
 
 // Auth API functions
@@ -97,12 +102,10 @@ export const authAPI = {
     name: string;
     role?: string;
     referredBy?: string;
-  }) => apiClient.post('/api/auth/register', userData),
+  }) => apiClient.post("/api/auth/register", userData),
 
-  login: (credentials: {
-    email: string;
-    password: string;
-  }) => apiClient.post('/api/auth/login', credentials),
+  login: (credentials: { email: string; password: string }) =>
+    apiClient.post("/api/auth/login", credentials),
 
-  getProfile: () => apiClient.get('/api/auth/profile'),
+  getProfile: () => apiClient.get("/api/auth/profile"),
 };

@@ -1,12 +1,22 @@
-'use client';
+"use client";
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import {
-  Eye, EyeOff, Mail, Lock, User, UserCheck,
-  AlertCircle, CheckCircle, ArrowRight, Shield, Gift, Users
-} from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  UserCheck,
+  AlertCircle,
+  CheckCircle,
+  ArrowRight,
+  Shield,
+  Gift,
+  Users,
+} from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
@@ -32,12 +42,15 @@ interface UserRegistrationData {
 /** ---------------------------
  *  Enhanced Login Component
  *  --------------------------*/
-export const EnhancedLoginForm = ({ onSwitchToRegister, onForgotPassword }: LoginFormProps) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export const EnhancedLoginForm = ({
+  onSwitchToRegister,
+  onForgotPassword,
+}: LoginFormProps) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
   const { login } = useAuth();
@@ -45,14 +58,14 @@ export const EnhancedLoginForm = ({ onSwitchToRegister, onForgotPassword }: Logi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       await login(email, password);
-      router.push('/'); // Redirect to home after successful login
+      router.push("/"); // Redirect to home after successful login
     } catch (err: unknown) {
-      setError((err as Error)?.message || 'Login failed');
+      setError((err as Error)?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -102,7 +115,7 @@ export const EnhancedLoginForm = ({ onSwitchToRegister, onForgotPassword }: Logi
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted w-5 h-5" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -114,7 +127,11 @@ export const EnhancedLoginForm = ({ onSwitchToRegister, onForgotPassword }: Logi
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-ink transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -141,7 +158,11 @@ export const EnhancedLoginForm = ({ onSwitchToRegister, onForgotPassword }: Logi
             </div>
 
             {/* Submit Button */}
-            <button type="submit" disabled={loading} className="w-full btn btn-primary">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full btn btn-primary"
+            >
               {loading ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
@@ -159,7 +180,7 @@ export const EnhancedLoginForm = ({ onSwitchToRegister, onForgotPassword }: Logi
           {/* Register Link */}
           <div className="mt-8 text-center">
             <p className="text-muted">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <button
                 onClick={onSwitchToRegister}
                 className="font-medium text-sky hover:text-mint transition-colors category-highlight"
@@ -191,31 +212,36 @@ export const EnhancedLoginForm = ({ onSwitchToRegister, onForgotPassword }: Logi
 /** ------------------------------
  *  Enhanced Register Component
  *  -----------------------------*/
-export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
+export const EnhancedRegisterForm = ({
+  onSwitchToLogin,
+}: RegisterFormProps) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'CUSTOMER',
-    referredBy: ''
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "CUSTOMER",
+    referredBy: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState({ score: 0, feedback: '' });
+  const [passwordStrength, setPasswordStrength] = useState({
+    score: 0,
+    feedback: "",
+  });
 
   const { register } = useAuth();
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
-    if (name === 'password') {
+    if (name === "password") {
       checkPasswordStrength(value);
     }
   };
@@ -225,40 +251,43 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
     const feedback: string[] = [];
 
     if (password.length >= 8) score++;
-    else feedback.push('at least 8 characters');
+    else feedback.push("at least 8 characters");
 
     if (/[a-z]/.test(password)) score++;
-    else feedback.push('lowercase letter');
+    else feedback.push("lowercase letter");
 
     if (/[A-Z]/.test(password)) score++;
-    else feedback.push('uppercase letter');
+    else feedback.push("uppercase letter");
 
     if (/\d/.test(password)) score++;
-    else feedback.push('number');
+    else feedback.push("number");
 
     if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++;
-    else feedback.push('special character');
+    else feedback.push("special character");
 
     setPasswordStrength({
       score,
-      feedback: feedback.length > 0 ? `Add ${feedback.join(', ')}` : 'Strong password!'
+      feedback:
+        feedback.length > 0 ? `Add ${feedback.join(", ")}` : "Strong password!",
     });
   };
 
   const validateForm = () => {
-    if (!formData.name.trim()) return 'Full name is required';
-    if (!formData.email.trim()) return 'Email is required';
-    if (!formData.email.includes('@')) return 'Please enter a valid email';
-    if (formData.password.length < 6) return 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword) return 'Passwords do not match';
-    if (!agreedToTerms) return 'Please agree to the terms and conditions';
+    if (!formData.name.trim()) return "Full name is required";
+    if (!formData.email.trim()) return "Email is required";
+    if (!formData.email.includes("@")) return "Please enter a valid email";
+    if (formData.password.length < 6)
+      return "Password must be at least 6 characters";
+    if (formData.password !== formData.confirmPassword)
+      return "Passwords do not match";
+    if (!agreedToTerms) return "Please agree to the terms and conditions";
     return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     const validationError = validateForm();
     if (validationError) {
@@ -274,27 +303,27 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
         email: formData.email.trim(),
         password: formData.password,
         role: formData.role,
-        ...(formData.referredBy && { referredBy: formData.referredBy.trim() })
+        ...(formData.referredBy && { referredBy: formData.referredBy.trim() }),
       };
 
       await register(userData);
-      setSuccess('Account created successfully! Welcome to Enjoyor.');
+      setSuccess("Account created successfully! Welcome to Enjoyor.");
 
       // Redirect after successful registration
       setTimeout(() => {
-        router.push('/');
+        router.push("/");
       }, 1500);
     } catch (err: unknown) {
-      setError((err as Error)?.message || 'Registration failed');
+      setError((err as Error)?.message || "Registration failed");
     } finally {
       setLoading(false);
     }
   };
 
   const getStrengthColor = () => {
-    if (passwordStrength.score <= 2) return 'bg-rose';
-    if (passwordStrength.score <= 3) return 'bg-banana';
-    return 'bg-mint';
+    if (passwordStrength.score <= 2) return "bg-rose";
+    if (passwordStrength.score <= 3) return "bg-banana";
+    return "bg-mint";
   };
 
   const getStrengthWidth = () => {
@@ -311,7 +340,9 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
               <span className="text-white font-bold text-2xl">E</span>
             </div>
             <h2 className="hero-title text-2xl mb-2">Join Enjoyor</h2>
-            <p className="text-muted">Create your account and start exploring</p>
+            <p className="text-muted">
+              Create your account and start exploring
+            </p>
           </div>
 
           {/* Error Message */}
@@ -371,11 +402,13 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
               <div className="grid grid-cols-2 gap-3 mt-2">
                 <button
                   type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, role: 'CUSTOMER' }))}
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, role: "CUSTOMER" }))
+                  }
                   className={`p-3 rounded-lg border transition-all ${
-                    formData.role === 'CUSTOMER'
-                      ? 'bg-sky-tint border-sky text-ink'
-                      : 'border-line text-muted hover:border-sky hover:bg-sky-tint'
+                    formData.role === "CUSTOMER"
+                      ? "bg-sky-tint border-sky text-ink"
+                      : "border-line text-muted hover:border-sky hover:bg-sky-tint"
                   }`}
                 >
                   <User className="w-5 h-5 mx-auto mb-1" />
@@ -383,11 +416,13 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, role: 'ORGANIZER' }))}
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, role: "ORGANIZER" }))
+                  }
                   className={`p-3 rounded-lg border transition-all ${
-                    formData.role === 'ORGANIZER'
-                      ? 'bg-mint-tint border-mint text-ink'
-                      : 'border-line text-muted hover:border-mint hover:bg-mint-tint'
+                    formData.role === "ORGANIZER"
+                      ? "bg-mint-tint border-mint text-ink"
+                      : "border-line text-muted hover:border-mint hover:bg-mint-tint"
                   }`}
                 >
                   <UserCheck className="w-5 h-5 mx-auto mb-1" />
@@ -403,7 +438,7 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted w-5 h-5" />
                 <input
                   name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
                   onChange={handleChange}
@@ -415,7 +450,11 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-ink transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
               {/* Password Strength Indicator */}
@@ -427,7 +466,9 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
                       style={{ width: getStrengthWidth() }}
                     ></div>
                   </div>
-                  <p className="text-xs text-muted mt-1">{passwordStrength.feedback}</p>
+                  <p className="text-xs text-muted mt-1">
+                    {passwordStrength.feedback}
+                  </p>
                 </div>
               )}
             </div>
@@ -439,7 +480,7 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted w-5 h-5" />
                 <input
                   name="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -451,7 +492,11 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-ink transition-colors"
                 >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
               {/* Password Match Indicator */}
@@ -465,7 +510,9 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
                   ) : (
                     <>
                       <AlertCircle className="w-4 h-4 text-rose" />
-                      <span className="text-xs text-rose">Passwords don't match</span>
+                      <span className="text-xs text-rose">
+                        Passwords don't match
+                      </span>
                     </>
                   )}
                 </div>
@@ -491,7 +538,9 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
               {formData.referredBy && (
                 <div className="mt-2 p-2 bg-banana-tint rounded flex items-center gap-2">
                   <Gift className="w-4 h-4 text-banana flex-shrink-0" />
-                  <p className="text-xs text-ink">You'll receive a welcome discount coupon!</p>
+                  <p className="text-xs text-ink">
+                    You'll receive a welcome discount coupon!
+                  </p>
                 </div>
               )}
             </div>
@@ -505,13 +554,22 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
                 className="h-4 w-4 mt-0.5 text-sky focus:ring-sky border-line rounded"
               />
-              <label htmlFor="terms" className="text-sm text-muted cursor-pointer">
-                I agree to the{' '}
-                <button type="button" className="text-sky hover:text-mint category-highlight">
+              <label
+                htmlFor="terms"
+                className="text-sm text-muted cursor-pointer"
+              >
+                I agree to the{" "}
+                <button
+                  type="button"
+                  className="text-sky hover:text-mint category-highlight"
+                >
                   Terms of Service
-                </button>{' '}
-                and{' '}
-                <button type="button" className="text-sky hover:text-mint category-highlight">
+                </button>{" "}
+                and{" "}
+                <button
+                  type="button"
+                  className="text-sky hover:text-mint category-highlight"
+                >
                   Privacy Policy
                 </button>
               </label>
@@ -540,7 +598,7 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
           {/* Login Link */}
           <div className="mt-8 text-center">
             <p className="text-muted">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <button
                 onClick={onSwitchToLogin}
                 className="font-medium text-sky hover:text-mint transition-colors category-highlight"
@@ -577,22 +635,22 @@ export const EnhancedRegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => 
  *  Forgot Password Component
  *  ---------------------------*/
 export const ForgotPasswordForm = ({ onBack }: ForgotPasswordFormProps) => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       // Placeholder for forgot password API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       setSuccess(true);
     } catch (err: unknown) {
-      setError((err as Error)?.message || 'Failed to send reset email');
+      setError((err as Error)?.message || "Failed to send reset email");
     } finally {
       setLoading(false);
     }
@@ -628,7 +686,9 @@ export const ForgotPasswordForm = ({ onBack }: ForgotPasswordFormProps) => {
               <Lock className="w-8 h-8 text-white" />
             </div>
             <h2 className="hero-title text-2xl mb-2">Reset Password</h2>
-            <p className="text-muted">Enter your email to receive a reset link</p>
+            <p className="text-muted">
+              Enter your email to receive a reset link
+            </p>
           </div>
 
           {error && (
@@ -673,7 +733,7 @@ export const ForgotPasswordForm = ({ onBack }: ForgotPasswordFormProps) => {
                     Sending...
                   </div>
                 ) : (
-                  'Send Reset Link'
+                  "Send Reset Link"
                 )}
               </button>
             </div>
@@ -687,7 +747,7 @@ export const ForgotPasswordForm = ({ onBack }: ForgotPasswordFormProps) => {
 /** -----------------------
  *  Main Auth Container
  *  ----------------------*/
-type View = 'login' | 'register' | 'forgot';
+type View = "login" | "register" | "forgot";
 
 export default function EnhancedAuthPage() {
   const { user } = useAuth();
@@ -696,17 +756,17 @@ export default function EnhancedAuthPage() {
   const searchParams = useSearchParams();
 
   // get view from URL (?view=login|register|forgot), default to 'login'
-  const urlView = (searchParams.get('view') as View) ?? 'login';
-  const safeUrlView: View = ['login', 'register', 'forgot'].includes(urlView)
+  const urlView = (searchParams.get("view") as View) ?? "login";
+  const safeUrlView: View = ["login", "register", "forgot"].includes(urlView)
     ? (urlView as View)
-    : 'login';
+    : "login";
 
   const [currentView, setCurrentView] = useState<View>(safeUrlView);
 
   // sync with URL changes (back/forward)
   useEffect(() => {
-    const v = (searchParams.get('view') as View) ?? 'login';
-    if (['login', 'register', 'forgot'].includes(v) && v !== currentView) {
+    const v = (searchParams.get("view") as View) ?? "login";
+    if (["login", "register", "forgot"].includes(v) && v !== currentView) {
       setCurrentView(v);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -715,8 +775,8 @@ export default function EnhancedAuthPage() {
   // helper to update both state and URL
   const setView = (v: View) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (v === 'login') params.delete('view');
-    else params.set('view', v);
+    if (v === "login") params.delete("view");
+    else params.set("view", v);
 
     const next = params.toString();
     router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
@@ -735,7 +795,7 @@ export default function EnhancedAuthPage() {
           <p className="text-muted mb-6">
             You are already signed in as {user.name}.
           </p>
-          <button onClick={() => router.push('/')} className="btn btn-primary">
+          <button onClick={() => router.push("/")} className="btn btn-primary">
             Go to Home
             <ArrowRight className="w-4 h-4" />
           </button>
@@ -746,17 +806,17 @@ export default function EnhancedAuthPage() {
 
   return (
     <>
-      {currentView === 'login' && (
+      {currentView === "login" && (
         <EnhancedLoginForm
-          onSwitchToRegister={() => setView('register')}
-          onForgotPassword={() => setView('forgot')}
+          onSwitchToRegister={() => setView("register")}
+          onForgotPassword={() => setView("forgot")}
         />
       )}
-      {currentView === 'register' && (
-        <EnhancedRegisterForm onSwitchToLogin={() => setView('login')} />
+      {currentView === "register" && (
+        <EnhancedRegisterForm onSwitchToLogin={() => setView("login")} />
       )}
-      {currentView === 'forgot' && (
-        <ForgotPasswordForm onBack={() => setView('login')} />
+      {currentView === "forgot" && (
+        <ForgotPasswordForm onBack={() => setView("login")} />
       )}
     </>
   );
